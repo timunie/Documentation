@@ -6,11 +6,17 @@ This is a guide that you can read while lying down on your couch - it explains A
 
 ## Avalonia XAML Basics
 
+XAML is almost XML, but compiled. XML tags are classes. Attributes are properties. For properties that are complex types \(and need to be assembled - use Element.Property notation\)
+
 Explain the namespaces, 
 
-&lt;Element.Property&gt; notation. 
-
 Basic Markup extensions: x:Static and StaticResource with visual samples
+
+Referencing Assets \(e.g. images\).
+
+XML Resources
+
+Pulling resources into C\# code.
 
 ## Visual Trees
 

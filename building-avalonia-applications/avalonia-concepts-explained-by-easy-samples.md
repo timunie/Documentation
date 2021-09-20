@@ -6,11 +6,17 @@ This is a hands on guide to the Avalonia \(and WPF\) concepts providing C\# samp
 
 ## Avalonia XAML Basics
 
+XAML is almost XML, but compiled. XML tags are classes. Attributes are properties. For properties that are complex types \(and need to be assembled - use Element.Property notation\)
+
 Explain the namespaces, 
 
-&lt;Element.Property&gt; notation. 
-
 Basic Markup extensions: x:Static and StaticResource with visual samples
+
+Referencing Assets \(e.g. images\).
+
+XML Resources
+
+Pulling resources into C\# code.
 
 ## Visual Trees
 
@@ -23,6 +29,8 @@ Basic Markup extensions: x:Static and StaticResource with visual samples
 ## Avalonia Bindings
 
 ## Routed Events
+
+also mention detecting routed events in Development Tool
 
 ## Commands, Calling C\# Methods from XAML
 
