@@ -34,7 +34,7 @@
 * [Community](developing-avalonia/community.md)
 * [FAQ](developing-avalonia/faq.md)
 
-## Avalonia Reference
+## Avalonia API Reference <a id="avalonia-reference"></a>
 
 * [Untitled](avalonia-reference/untitled.md)
 
