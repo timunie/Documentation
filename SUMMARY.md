@@ -12,6 +12,12 @@
 ## Avalonia for WPF Experts
 
 * [Introduction](avalonia-for-wpf-experts/untitled.md)
+* [Avalonia Special Properties](avalonia-for-wpf-experts/avalonia-special-properties.md)
+* [Avalonia Bindings](avalonia-for-wpf-experts/avalonia-bindings.md)
+* [Avalonia Routed Events and Event Propagation](avalonia-for-wpf-experts/avalonia-routed-events-and-event-propagation.md)
+* [ContentPresenter, ContentControl, ItemsPresenter, ItemsControl](avalonia-for-wpf-experts/contentpresenter-contentcontrol-itemspresenter-itemscontrol.md)
+* [DataTemplates](avalonia-for-wpf-experts/datatemplates.md)
+* [ControlTemplates](avalonia-for-wpf-experts/controltemplates.md)
 
 ## Developing with Avalonia <a id="developing-avalonia"></a>
 
