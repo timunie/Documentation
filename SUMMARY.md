@@ -24,4 +24,5 @@
 ## Developing with Avalonia <a id="developing-avalonia"></a>
 
 * [Introduction](developing-avalonia/untitled.md)
+* [Avalonia Development Tool](developing-avalonia/avalonia-development-tool.md)
 
