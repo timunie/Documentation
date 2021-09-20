@@ -10,7 +10,7 @@ The Avalonia building blocks \(and the corresponding samples\) will provide the 
 
 Here and in the rest of the Avalonia UI guides, we do not require prior knowledge of WPF, but it will be good to go over the previous guide - [Introduction to Avalonia](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2) and especially its [Creating and Running a Simple Avalonia Application under Visual Studio sample](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2) section.
 
-The of this guide is also covered in Multiplatform UI Coding with [AvaloniaUI in Easy Samples. Part 1 - AvaloniaUI Building Blocks](https://www.codeproject.com/Articles/5308645/Multiplatform-UI-Coding-with-AvaloniaUI-in-Easy-Sa) article and all the code samples are located under [NP.CodeForAvaloniaInEasySampleArticle](https://github.com/npolyak/NP.CodeForAvaloniaInEasySampleArticle) repository.
+The of this guide is also covered in Multiplatform UI Coding with [AvaloniaUI in Easy Samples. Part 1 - AvaloniaUI Building Blocks](https://www.codeproject.com/Articles/5308645/Multiplatform-UI-Coding-with-AvaloniaUI-in-Easy-Sa) article and all the code samples are located under [NP.CodeForAvaloniaInEasySampleArticle](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/#creating-and-running-a-simple-avalonia-application-under-visual-studio) repository.
 
 The following topics are covered in this article:
 
