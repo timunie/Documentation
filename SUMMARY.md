@@ -36,5 +36,3 @@
 
 ## Avalonia API Reference <a id="avalonia-reference"></a>
 
-* [Untitled](avalonia-reference/untitled.md)
-
