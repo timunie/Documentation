@@ -20,9 +20,14 @@
 * [DataTemplates](avalonia-for-wpf-experts/datatemplates.md)
 * [ControlTemplates](avalonia-for-wpf-experts/controltemplates.md)
 * [Avalonia Styles](avalonia-for-wpf-experts/untitled-1.md)
+* [Avalonia Animations](avalonia-for-wpf-experts/avalonia-animations.md)
 
 ## Developing with Avalonia <a id="developing-avalonia"></a>
 
 * [Introduction](developing-avalonia/untitled.md)
 * [Avalonia Development Tool](developing-avalonia/avalonia-development-tool.md)
+* [MVVM Pattern](developing-avalonia/mvvm-pattern.md)
+* [Notes on Arranging the Code](developing-avalonia/notes-on-arranging-the-code.md)
+* [Publishing a Control to MacOS Store](developing-avalonia/publishing-a-control-to-macos-store.md)
+* [Running](developing-avalonia/running.md)
 
