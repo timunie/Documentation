@@ -29,5 +29,8 @@
 * [MVVM Pattern](developing-avalonia/mvvm-pattern.md)
 * [Notes on Arranging the Code](developing-avalonia/notes-on-arranging-the-code.md)
 * [Publishing a Control to MacOS Store](developing-avalonia/publishing-a-control-to-macos-store.md)
-* [Running](developing-avalonia/running.md)
+* [Logging Errors and Warning](developing-avalonia/logging-errors-and-warning.md)
+* [Running Avalonia Application on a Raspberry Pi](developing-avalonia/running.md)
+* [Community](developing-avalonia/community.md)
+* [FAQ](developing-avalonia/faq.md)
 
