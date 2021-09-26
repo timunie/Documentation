@@ -8,8 +8,6 @@ The best way to introduce a development framework is to show its off the shelf c
 
 The Avalonia building blocks \(and the corresponding samples\) will provide the engineers with the breadth of knowledge of how to operate with Avalonia, while the explanation of the concepts will cover the knowledge depth.
 
-Here and in the rest of the Avalonia UI guides, we do not require prior knowledge of WPF, but it will be good to go over the previous guide - [Introduction to Avalonia](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2) and especially its [Creating and Running a Simple Avalonia Application under Visual Studio sample](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2) section.
-
 The content of this guide is also covered in Multiplatform UI Coding with [AvaloniaUI in Easy Samples. Part 1 - AvaloniaUI Building Blocks](https://www.codeproject.com/Articles/5308645/Multiplatform-UI-Coding-with-AvaloniaUI-in-Easy-Sa) article and all the code samples are located under [NP.CodeForAvaloniaInEasySampleArticle](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/#creating-and-running-a-simple-avalonia-application-under-visual-studio) repository.
 
 The following topics are covered in this article:
