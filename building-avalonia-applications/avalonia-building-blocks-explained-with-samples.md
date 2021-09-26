@@ -92,8 +92,6 @@ The simple XAML code to create a text block is e.g.:
 
 Here is an image for the `TextBox` sample:
 
-![Image 6](https://www.codeproject.com/KB/Articles/5308645/TextBoxSample.png)
-
 If you type anything within the `TextBox`, its property `Text` will get updated with the typed text.
 
 I used binding to duplicate the text typed within the `TextBox` by the `TextBlock` placed underneath. Here is the XAML code:
@@ -124,7 +122,7 @@ We bind the `Text` property of the `TextBlock` to the `Text` property of the `Te
 
 Next control we'll describe is `Button`:
 
-![Button](https://www.codeproject.com/KB/Articles/5308645/ButtonSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/ButtonSample.png)
 
 Here is the code for our button:
 
@@ -144,13 +142,13 @@ Buttons define `Click` routed event - which is fired when the button is clicked.
 
 #### **ListBox**
 
-![Image 8](https://www.codeproject.com/KB/Articles/5308645/ListBoxSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/ListBoxSample.png)
 
 `ListBox` displays a collection of items with capability of selecting one item at a time. If the number of items exceeds the size of the `ListBox`, it will display the scroll bars.
 
-The best way to use the list box is by binding its `Items` property to a collection. How to do it will be shown below. In our case, we simply created `ListBoxItem`s within the XAML code to populate it:XMLCopy Code
+The best way to use the list box is by binding its `Items` property to a collection. How to do it will be shown below. In our case, we simply created `ListBoxItem`s within the XAML code to populate it:
 
-```text
+```markup
 <ListBox x:Name="TheListBox">
   <ListBoxItem Content="Item 1"/>
   <ListBoxItem Content="Item 2"/>
@@ -161,13 +159,13 @@ The best way to use the list box is by binding its `Items` property to a collect
 
 The most important properties of the `ListBox` are `Items` mentioned above and selection related properties: `SelectedIndex` and `SelectedItem`. The `SelectedIndex` of this `ListBox` is bound to the `SelectedIndex` of the `ComboBox` described in the next subsection, so when you change the selected item on each of them, the other will react in the same fashion.
 
-**ComboBox**
+#### **ComboBox**
 
-![Image 9](https://www.codeproject.com/KB/Articles/5308645/ComboBoxSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/ComboBoxSample.png)
 
 `ComboBox` is also called `DropDownBox` in various other frameworks. Just like `ListBox` it also stores a collection of items, but only selected item is displayed all the time - the other items are only displayed in a popup \(or rather drop-down\) when the mouse pointer clicks the arrow on its right hand side. The image above displays the `ComboBox` without a selected item but with the open `dropdown`. Here is the code that I used to create and populate the `ComboBox`:XMLCopy Code
 
-```text
+```markup
 <ComboBox VerticalAlignment="Top"
           Grid.Row="1"
           SelectedIndex="{Binding Path=SelectedIndex, ElementName=TheListBox}">
@@ -180,26 +178,26 @@ The most important properties of the `ListBox` are `Items` mentioned above and s
 
 Same as in case of `ListBox`, `ComboBox`es' main properties are `Items` \(to be bound to a collection\), `SelectedIndex` and `SelectedItem`. The example shows how to bind the `SelectedIndex` of the `ComboBox` to that of the `ListBox` to the left of it: `SelectedIndex="{Binding Path=SelectedIndex, ElementName=TheListBox, Mode=TwoWay}"`, so that when one changes Selection, the other will also change.
 
-**ToggleButton**
+#### **ToggleButton**
 
-![Image 10](https://www.codeproject.com/KB/Articles/5308645/ToggleButtonSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/ToggleButtonSample.png)
 
-`ToggleButton` is a control that has two states - Checked and Unchecked controlled by its boolean property `IsChecked`. Every time the button is clicked, its `IsChecked` property toggles its value from `false` to `true` and vice versa. The button's background changes depending on whether it is checked on unchecked.XMLCopy Code
+`ToggleButton` is a control that has two states - Checked and Unchecked controlled by its boolean property `IsChecked`. Every time the button is clicked, its `IsChecked` property toggles its value from `false` to `true` and vice versa. The button's background changes depending on whether it is checked or unchecked:
 
-```text
+```markup
 <ToggleButton x:Name="TheToggleButton" 
               Content="Toggle Button"/>
 ```
 
 Again, in order to demonstrate the power of the binding, I bound the `ToggleButton`'s `IsChecked` property to that of the `CheckBox` next to it so that they change in sync.
 
-**CheckBox**
+#### **CheckBox**
 
-![Image 11](https://www.codeproject.com/KB/Articles/5308645/CheckBoxSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/CheckBoxSample.png)
 
-`CheckBox` is very similar to the toggle button, but looks different \(as you can see\). Here is the XAML code for `CheckBox`:XMLCopy Code
+`CheckBox` is very similar to the toggle button, but looks different \(as you can see\). Here is the XAML code for `CheckBox`:
 
-```text
+```markup
 <CheckBox Content="Check Box"
           VerticalAlignment="Top"
           Grid.Row="1"
@@ -210,47 +208,47 @@ You can see the binding that connects its `IsChecked` property to that of the `T
 
 `CheckBox` also has a switch property `IsThreeState` and when it is set to `true`, the `CheckBox` can switch between three states - false, true and undefined - which corresponds to its `IsChecked` property set to `null`:
 
-![Image 12](https://www.codeproject.com/KB/Articles/5308645/ThreeStateCheckBoxSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/ThreeStateCheckBoxSample.png)
 
-Here is the code for three state `CheckBox`:XMLCopy Code
+Here is the code for three state `CheckBox`:
 
-```text
+```markup
 <CheckBox Content="Three State Check Box"
           IsThreeState="True"/>
 ```
 
-**ContextMenu**
+#### **ContextMenu**
 
 ![Image 13](https://www.codeproject.com/KB/Articles/5308645/ContextMenuSample.png)
 
-`ContextMenu` opens up when right mouse button is clicked on some area or control. Here is the code:XMLCopy Code
+`ContextMenu` opens up when right mouse button is clicked on some area or control. Here is the code:
 
-```text
+```markup
 <Grid Grid.Row="1"
     Background="Transparent">
-<Grid.ContextMenu>
-  <ContextMenu Grid.Row="1">
-    <MenuItem Header="Item1">
-      <MenuItem Header="SubItem1"/>
-      <MenuItem Header="SubItem2"/>
-    </MenuItem>
-    <MenuItem Header="Item2"/>
-    <MenuItem Header="Item3"/>
-    <MenuItem Header="Item4"/>
-  </ContextMenu>
-</Grid.ContextMenu>
-<TextBlock Text="Right Click To Open Context Menu"
-           VerticalAlignment="Center"/>
+  <Grid.ContextMenu>
+    <ContextMenu Grid.Row="1">
+      <MenuItem Header="Item1">
+        <MenuItem Header="SubItem1"/>
+        <MenuItem Header="SubItem2"/>
+      </MenuItem>
+      <MenuItem Header="Item2"/>
+      <MenuItem Header="Item3"/>
+      <MenuItem Header="Item4"/>
+    </ContextMenu>
+  </Grid.ContextMenu>
+  <TextBlock Text="Right Click To Open Context Menu"
+             VerticalAlignment="Center"/>
 </Grid>
 ```
 
-**Menu**
+#### **Menu**
 
-![Image 14](https://www.codeproject.com/KB/Articles/5308645/MenuSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/MenuSample.png)
 
-Menus are usually placed at the top of the window, but can also appear in other places. Here is the XAML code for the `Menu` sample:XMLCopy Code
+Menus are usually placed at the top of the window, but can also appear in other places. Here is the XAML code for the `Menu` sample:
 
-```text
+```markup
 <Menu Grid.Row="1">
     <MenuItem Header="FILE">
       <MenuItem Header="New"/>
@@ -264,15 +262,15 @@ Menus are usually placed at the top of the window, but can also appear in other 
 </Menu>
 ```
 
-**Popup**
+#### **Popup**
 
 Popup is a control that opens a light weight window next to the so called popup's `PlacementTarget`:
 
-![Image 15](https://www.codeproject.com/KB/Articles/5308645/PopupWindowSample.png)
+![](https://www.codeproject.com/KB/Articles/5308645/PopupWindowSample.png)
 
-Whether the popup is open or not is controled \(and reflected\) by its `IsOpen` property which in our case is tied to the `IsChecked` property of the `ToggleButton` that controls \(and reflects\) the popup's state:XMLCopy Code
+Whether the popup is open or not is controlled \(and reflected\) by its `IsOpen` property which in our case is tied to the `IsChecked` property of the `ToggleButton` that controls \(and reflects\) the popup's state:
 
-```text
+```markup
 <Grid Grid.Row="1">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
