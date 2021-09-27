@@ -273,13 +273,17 @@ The most important of them are `x:Name` and `x:Key`.
 
 `x:Name` is used for elements within the XAML tree in order to be able to easily find an element in C\# and also \(by some people\) in order provide some self documentation for XAML and in order to be able to easily identify the element within Avalonia Development Tool \(as will be shown later\).
 
-We already showed how to find an x:Name'd element in C\# code in [Introduction to Avalonia](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/#creating-and-running-a-simple-avalonia-application-under-visual-studio): one can use the `FindControl(...)` method e.g.
+We already showed how to find an x:Name'd element in C\# code in [Introduction to Avalonia](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/#creating-and-running-a-simple-avalonia-application-under-visual-studio): one can use the `FindControl(...)` method e.g. for a button defined in XAML and x:Named `"CloseWindowButton"` we can use the following method in the code-behind to find it:
 
 ```csharp
 var button = this.FindControl<Button>("CloseWindowButton");
 ```
 
-Basic Markup extensions: x:Static and StaticResource with visual samples
+`x:Key` is used for finding the Avalonia XAML resources and we are going to explain it in the section dedicated to them.
+
+### Very Brief Introduction to Markup Extensions
+
+
 
 Referencing Assets \(e.g. images\).
 
