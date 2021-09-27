@@ -178,7 +178,20 @@ xmlns:dep2="https://avaloniademos.com/xaml"
 
 at its top element and refer to the our `GreenButton` and `GrayButton` defined within the same project by `dep2:` prefix.
 
-### Accessing C\# Properties in XAML
+### Accessing C\# Composite Properties in XAML
+
+We already mentioned above, that C\# built-in properties can be accessed as XML attributes of the corresponding element, e.g:
+
+```markup
+<my_namespace:MyClass Prop1="Hello World"
+                      Prop2="123"/>
+```
+
+`Prop1` and `Prop2` are simple C\# properties defined on class `MyClass` which can be found in the C\# namespace referred to by `my_namespace` prefix of that XAML file. `Prop1` is likely of `string` type, while `Prop2` can be either of any numeric type or a string \(the XAML will automatically convert string "123" to the correct type\).
+
+What will happen, however, if the property itself is of some complex type that contains several properties of its own.
+
+C\# Solution NP.Demos.AccessPropertiesInXamlSample.sln shows how to create such property in XAML.
 
 
 
