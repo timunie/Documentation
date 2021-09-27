@@ -6,7 +6,7 @@ This is a hands on guide to the Avalonia \(and WPF\) concepts providing C\# samp
 
 ## Avalonia XAML Basics in Samples
 
-### What is XAML \(Introduction\) 
+### Introduction to XAML 
 
 XAML is XML used for building C\# \(mostly visual\) objects.
 
@@ -25,7 +25,9 @@ XAML file can be associated with a C\# file called "code-behind" to define the s
 
 In the rest of this chapter, we shall give simple samples to explain various Avalonia XAML features.
 
+The code for all XAML samples shown below is located within [NP.Avalonia.Demos](https://github.com/npolyak/NP.Avalonia.Demos/) repository under its [NP.Demos.XamlSamples](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples) folder.
 
+### XAML Namespaces Sample
 
 XAML is almost XML, but compiled. XML tags are classes. Attributes are properties. For properties that are complex types \(and need to be assembled - use Element.Property notation\)
 
