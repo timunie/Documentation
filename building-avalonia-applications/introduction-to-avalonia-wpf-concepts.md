@@ -182,13 +182,11 @@ at its top element and refer to the our `GreenButton` and `GrayButton` defined w
 
 
 
-Explain the namespaces, 
-
 Basic Markup extensions: x:Static and StaticResource with visual samples
 
 Referencing Assets \(e.g. images\).
 
-XML Resources
+XAML Resources
 
 Pulling resources into C\# code.
 
