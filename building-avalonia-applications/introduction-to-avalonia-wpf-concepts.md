@@ -191,9 +191,87 @@ We already mentioned above, that C\# built-in properties can be accessed as XML 
 
 What will happen, however, if the property itself is of some complex type that contains several properties of its own.
 
-C\# Solution NP.Demos.AccessPropertiesInXamlSample.sln shows how to create such property in XAML.
+C\# Solution [NP.Demos.AccessPropertiesInXamlSample.sln](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.AccessPropertiesInXamlSample) shows how to create such property in XAML.
 
+There is a class `Person` defined within the project:
 
+```csharp
+namespace NP.Demos.AccessPropertiesInXamlSample
+{
+    public class Person
+    {
+        public int AgeInYears { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+
+        public override string ToString()
+        {
+            return $"Person: {FirstName} {LastName}, Age: {AgeInYears}";
+        }
+    }
+}
+
+```
+
+We want to display it as the Window's content. Here is what we have within MainWindow.xaml file:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NP.Demos.AccessPropertiesInXamlSample"
+        x:Class="NP.Demos.AccessPropertiesInXamlSample.MainWindow"
+        Width="300"
+        Height="200"
+        HorizontalContentAlignment="Center"
+        VerticalContentAlignment="Center"
+        Title="AccessPropertiesInXamlSample">
+  <Window.Content>
+    <local:Person FirstName="Joe" 
+                  LastName="Doe"
+                  AgeInYears="25"/>
+  </Window.Content>
+</Window>
+```
+
+Note the way we assign `Content` property of the `Window` to a composite Type:
+
+```markup
+<Window ...>
+  <Window.Content>
+    <local:Person FirstName="Joe" 
+                  LastName="Doe"
+                  AgeInYears="25"/>
+  </Window.Content>
+</Window>
+```
+
+we use `Window.Content` property tag with a period separating the name of the class from the name of the property. 
+
+Note that in the same way as we assign properties of composite types, we can also assign primitive type properties, e.g. we can set the Window's Width by the following code:
+
+```markup
+<Window ...>
+  <Window.Width>
+    <x:Double>300</x:Double>
+  </Window.Width>
+</Window>
+```
+
+instead of using XML attributes. Of course, such notations are much bulkier than XAML attribute notations are are rarely used for properties of primitive types.
+
+**Note**: Because `Window.Content` is a special property marked by `ContentAttribte`, we did not have to add `<Window.Content>` at all and could have placed `<local:Person .../>` object straight under `<Window...>` tag. There is only one property per class that can be marked with the `ContentAttribute` so in many cases, we are forced to use the `<Class.Property` notations anyway.
+
+### Special Properties
+
+There are several special properties marked by prefix "x:", provided of course that we have "x" namespace prefix defined at the top of the file as:
+
+```markup
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+```
+
+The most important of them are `x:Name` and `x:Key`.
+
+`x:Name` is used for elements within the XAML tree in order to be able to easily find an element in C\# and also \(by some people\) in order provide some self documentation for XAML and in order to be able to easily identify the element within Avalonia Development Tool \(as will be shown later\).
 
 Basic Markup extensions: x:Static and StaticResource with visual samples
 
