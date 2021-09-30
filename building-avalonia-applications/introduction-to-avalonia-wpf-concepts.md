@@ -298,6 +298,164 @@ One can also create custom markup extensions, but this is rarely used and will n
 
 XAML resources is one of the most important methods of re-using XAML code and of placing some generic XAML code in generic Visual projects to be used in multiple applications.
 
+#### StaticResource vs DynamicResource Sample
+
+This sample shows the main difference between static and dynamic resources: static resource target value will not update when the resource itself is updated, while dynamic - will.
+
+The sample is located under [NP.Demos.StaticVsDynamicXamlResourcesSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.StaticVsDynamicXamlResourcesSample) solution.
+
+Open the solution and run it, here is what you will see:
+
+![](../.gitbook/assets/image%20%2817%29.png)
+
+Pressing "Change Status Color" button will result in the third rectangle switching its color to red:
+
+![](../.gitbook/assets/image%20%2818%29.png)
+
+Here is the MainWindow.xaml file for the sample:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.StaticVsDynamicXamlResourcesSample.MainWindow"
+        Title="NP.Demos.StaticVsDynamicXamlResourcesSample"
+        Width="300"
+        Height="200">
+  <Window.Resources>
+    <ResourceDictionary>
+      <!--We set the XAML resource-->
+      <SolidColorBrush x:Key="StatusBrush" 
+                       Color="Green"/>
+    </ResourceDictionary>
+  </Window.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <StackPanel x:Name="ElementsPanel" 
+                Orientation="Vertical">
+      <!--Refer to xaml resource using StaticResource Markup Expression -->
+      <Border x:Name="Border1"
+              Background="{StaticResource StatusBrush}"
+              Height="30"
+              Width="80"
+              Margin="0,5"/>
+
+      <!--Refer to xaml resource using StaticResource (without markup expression) -->
+      <Border x:Name="Border2"
+              Height="30"
+              Width="80"
+              Margin="0,5">
+        <Border.Background>
+          <StaticResource ResourceKey="StatusBrush"/>
+        </Border.Background>
+      </Border>
+
+      <!--Refer to xaml resource using DynamicResource Markup Expression -->
+      <Border x:Name="StatusChangingBorder"
+              Background="{DynamicResource StatusBrush}"
+              Height="30"
+              Width="80"
+              Margin="0,5"/>
+    </StackPanel>
+    <Button x:Name="ChangeStatusButton"
+            Grid.Row="1"
+            Width="160"
+            HorizontalAlignment="Right"
+            HorizontalContentAlignment="Center"
+            Content="Change Status Color"
+            Margin="10"/>
+  </Grid>
+</Window>
+
+```
+
+We define the XAML resource within the same MainWindow.xaml file as a resource of the window:
+
+```markup
+<Window.Resources>
+  <ResourceDictionary>
+    <!--We set the XAML resource-->
+    <SolidColorBrush x:Key="StatusBrush" 
+                     Color="Green"/>
+  </ResourceDictionary>
+</Window.Resources>
+```
+
+`x:Key` of the XAML resource can be used by `StaticResource` and `DynamicResource` to refer to the particular resource.
+
+We then use `StaticResource` to set the background of two first borders and `DynamicResource` to the third border within a vertical border stack.
+
+For the first border within the stack we use `StaticResource` markup extension:
+
+```markup
+<!--Refer to xaml resource using StaticResource Markup Expression -->
+<Border x:Name="Border1"
+      Background="{StaticResource StatusBrush}"
+      Height="30"
+      Width="80"
+      Margin="0,5"/>
+```
+
+For the second border we use `StaticResource` class, without markup extension \(and you can see that the corresponding XAML is considerably more verbose\):
+
+```markup
+      <!--Refer to xaml resource using StaticResource (without markup expression) -->
+      <Border x:Name="Border2"
+              Height="30"
+              Width="80"
+              Margin="0,5">
+        <Border.Background>
+          <StaticResource ResourceKey="StatusBrush"/>
+        </Border.Background>
+      </Border>
+```
+
+Finally, the third border uses `DynamicResource` markup extension:
+
+```markup
+      <!--Refer to xaml resource using DynamicResource Markup Expression -->
+      <Border x:Name="StatusChangingBorder"
+              Background="{DynamicResource StatusBrush}"
+              Height="30"
+              Width="80"
+              Margin="0,5"/>
+```
+
+Button "StatusChangingBorder" is hooked within MainWindow.xaml.cs file to change the "StatusBrush" Resource from "Green" to "Red":
+
+```csharp
+public MainWindow()
+{
+    InitializeComponent();
+
+    Button button = 
+            this.FindControl<Button>("ChangeStatusButton");
+
+    button.Click += Button_Click;
+}
+
+private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+{
+    var statusBrush = this.FindResource("StatusBrush");
+    this.Resources["StatusBrush"] = 
+                    new SolidColorBrush(Colors.Red);
+}
+```
+
+Even though the resource is the same for all three border, only last border's background changes - the one that uses `DynamicResource`.
+
+Other important differences between the static and dynamic resource are the following:
+
+* `DynamicResource` can refer to a XAML resource defined in XAML below the `DynamicResource` expression, while `StaticResource` should refer to a resource above it. 
+* `StaticResource` can be used to assign simple C\# properties on various objects used in XAML, while the target of a `DynamicResource` statement should always be a special Avalonia Property on AvaloniaObject \(special properties will be explained later\) 
+* Since `DynamicResource` is more powerful \(provides change notification\) it takes considerably more memory resources than `StaticResource`. Because of that when you do not need the change notification \(the property stays the same for the duration of the program\) you should always use `StaticResource`. `DynamicResources` are very useful when you want to dynamically change the themes or the colors of your application, e.g. allow the user to switch the theme or to change the colors depending on the time of the day.
+
+#### Referring to XAML Resources Defined in Different XAML Files and Projects Sample
+
+In this sample we show how to refer to XAML resources located in a different file within the same or different project.
+
 
 
 Referencing Assets \(e.g. images\).
