@@ -310,7 +310,7 @@ Open the solution and run it, here is what you will see:
 
 Pressing "Change Status Color" button will result in the third rectangle switching its color to red:
 
-![](../.gitbook/assets/image%20%2818%29.png)
+![](../.gitbook/assets/image%20%2831%29.png)
 
 Here is the MainWindow.xaml file for the sample:
 
@@ -438,9 +438,12 @@ public MainWindow()
 
 private void Button_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
 {
+    // getting a Window resource by its name
     var statusBrush = this.FindResource("StatusBrush");
+    
+    // setting the window resource to a new value
     this.Resources["StatusBrush"] = 
-                    new SolidColorBrush(Colors.Red);
+                     new SolidColorBrush(Colors.Red);
 }
 ```
 
@@ -456,7 +459,112 @@ Other important differences between the static and dynamic resource are the foll
 
 In this sample we show how to refer to XAML resources located in a different file within the same or different project.
 
+The sample is located under [NP.Demos.XamlResourcesInMultipleProjects](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.AccessPropertiesInXamlSample) Visual Studio solution. After running the sample you will see 3 rectangles of different colors - red, green and blue:
 
+![](../.gitbook/assets/image%20%2818%29.png)
+
+The solution consists of two projects - the main project NP.Demos.XamlResourcesInMultipleProjects and another project which the main project depends on - Dependency1Proj:
+
+![](../.gitbook/assets/image%20%2824%29.png)
+
+RedBrush resource is defined within Themes/BrushResources.axaml file under Dependency1Proj:
+
+```markup
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Add Resources Here -->
+  <SolidColorBrush x:Key="GreenBrush"
+                   Color="Green"/>
+</ResourceDictionary>
+```
+
+Note that the BrushResources.axaml file has "Avalonia XAML" build action \(as any Avalonia XAML resource file should\):
+
+![](../.gitbook/assets/image%20%2830%29.png)
+
+Such files are created by choosing "Resource Dictionary \(Avalonia\)" template for Visual Studio new item creation:
+
+![](../.gitbook/assets/image%20%2832%29.png)
+
+GreenBrush Avalonia Resource is defined within Themes/LocalBrushResources.axaml file \(this file is located in the main project\):
+
+```markup
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Add Resources Here -->
+  <SolidColorBrush x:Key="GreenBrush"
+                   Color="Green"/>
+</ResourceDictionary>
+```
+
+ Here is the content of MainWindow.axaml file:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.XamlResourcesInMultipleProjects.MainWindow"
+        Title="NP.Demos.XamlResourcesInMultipleProjects"
+        Width="100"
+        Height="180">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://Dependency1Proj/Themes/BrushResources.axaml"/>
+        <ResourceInclude Source="/Themes/LocalBrushResources.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+      <!-- BlueBrush is defined locally -->
+      <SolidColorBrush x:Key="BlueBrush"
+                       Color="Blue"/>
+    </ResourceDictionary>
+  </Window.Resources>
+  <StackPanel HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+    <Border x:Name="RedBorder"
+            Width="70"
+            Height="30"
+            Background="{StaticResource RedBrush}"
+            Margin="5"/>
+    <Border x:Name="GreenBorder"
+            Width="70"
+            Height="30"
+            Background="{StaticResource GreenBrush}"
+            Margin="5"/>
+    <Border x:Name="BlueBorder"
+            Width="70"
+            Height="30"
+            Background="{StaticResource BlueBrush}"
+            Margin="5"/>
+  </StackPanel>
+</Window>
+```
+
+We have 3 borders stacked vertically - first border's background is getting its value from RedBrush resource, second border's - from GreenBrush and third border from BlueBrush. 
+
+Take a look at the Resources section of the window at the top of the file:
+
+```markup
+<Window.Resources>
+  <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://Dependency1Proj/Themes/BrushResources.axaml"/>
+        <ResourceInclude Source="/Themes/LocalBrushResources.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+
+      <!-- BlueBrush is defined locally -->
+      <SolidColorBrush x:Key="BlueBrush"
+                       Color="Blue"/>
+    </ResourceDictionary>
+  </Window.Resources>
+```
+
+`<ResourceInclude .../>` tags within `<ResourceDictionary.MergedDictionary>` tag means that we are merging the Resource Dictionaries defined externally to the current dictionary - they way we get all their key-value pairs. Those who know WPF can notice the difference - in WPF we user `<ResourceDictionary Source="..."/>` tag and not `<ResourceInclude Source="..."/>`. It is a purely notational \(not conceptual\) difference, but still needs to be remembered.
+
+Note the Avalonia XAML urls for the merged files:
+
+* "avares://Dependency1Proj/Themes/BrushResources.axaml" - the url of the Avalonia XAML Resource file defined in a different project should start with the magic work "avares://" followed by the assembly name, followed by the path to the file: "avares://&lt;assembly-name&gt;/&lt;path-to-the-avalonia-resource\_file&gt;.
+* "/Themes/LocalBrushResources.axaml" - the url of the Avalonia XAML Resource file defined in the same project in which it is used, should only consist of a forward slash followed by the path to avalonia resource file from the root of the current project.
+
+At the end of the resource section, we define the BlushBrush resource - local to MainWindow.axaml file.
 
 Referencing Assets \(e.g. images\).
 
