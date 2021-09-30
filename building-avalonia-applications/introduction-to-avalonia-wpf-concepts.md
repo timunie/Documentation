@@ -566,7 +566,80 @@ Note the Avalonia XAML urls for the merged files:
 
 At the end of the resource section, we define the BlueBrush resource - local to MainWindow.axaml file.
 
-#### Referencing Assets in XAML
+### x:Static Markup Extension
+
+`x:Static` markup extension allows to refer to static properties defined in the same project or in some dependent projects. The sample code is located under [NP.Demos.XStaticMarkupExtensionSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.XStaticMarkupExtensionSample) solution. It contains two projects - the NP.Demos.XStaticMarkupExtensionSample \(main project\) and the dependency project Dependency1Proj. Main project contains class `LocalProjectStaticBrushes` while the dependency project contains `DependencyProjectStaticBrushes`
+
+![](../.gitbook/assets/image%20%2838%29.png)
+
+The contents of both C\# files are very simple - each defines and sets value for a single static property. Here is the content of `LocalProjectStaticBrushes` class:
+
+```csharp
+public class LocalProjectStaticBrushes
+{
+    public static Brush GreenBrush { get; set; } = 
+        new SolidColorBrush(Colors.Green);
+}
+```
+
+Here is the content of `DependencyProjectStaticBrushes` class:
+
+```csharp
+public class DependencyProjectStaticBrushes
+{
+    public static Brush RedBrush { get; set; } =
+        new SolidColorBrush(Colors.Red);
+}
+```
+
+Running the project will create a window with two rectangle red and green:
+
+![](../.gitbook/assets/image%20%2839%29.png)
+
+Here are the relevant parts of MainWindow.axaml file:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dep1="clr-namespace:Dependency1Proj;assembly=Dependency1Proj"
+        xmlns:local="clr-namespace:NP.Demos.XStaticMarkupExtensionSample"
+        ...>
+  <StackPanel HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+    <Border Width="70"
+            Height="30"
+            Background="{x:Static dep1:DependencyProjectStaticBrushes.RedBrush}"
+            Margin="5" />
+    <Border Width="70"
+        Height="30"
+        Background="{x:Static local:LocalProjectStaticBrushes.GreenBrush}"
+        Margin="5" />
+  </StackPanel>
+</Window>
+```
+
+There are two important namespace defined at the Window tag level: 
+
+```markup
+xmlns:dep1="clr-namespace:Dependency1Proj;assembly=Dependency1Proj"
+xmlns:local="clr-namespace:NP.Demos.XStaticMarkupExtensionSample"
+```
+
+"dep1" corresponds to the dependency project and "local" corresponds to the project local to the MainWindow.xaml file \(the main project\). 
+
+Using these namespace prefixes and `x:Static` markup extension we can set the `Background` properties on the two borders:
+
+```markup
+Background="{x:Static dep1:DependencyProjectStaticBrushes.RedBrush}"
+```
+
+and 
+
+```markup
+Background="{x:Static local:LocalProjectStaticBrushes.GreenBrush}"
+```
+
+### Referencing Assets in XAML
 
 In Avalonia Lingo - Assets are usually binary image \(e.g. png or jpg\) files. In this section we shall show how to refer to such files from `Image` controls within XAML.
 
@@ -656,7 +729,7 @@ public MainWindow()
 
 Note that even for the local file "LinuxIcon.jpg" \(file defined in the same project as the MainWindow.xaml.cs file that uses it\), we need to provide the full URL with "avares://&lt;assembly-name&gt;/" prefix.
 
-#### Non-Visual XAML Code
+### Non-Visual XAML Code
 
 The last sample will demonstrate that potentially one can use XAML even for a completely non-visual code. The sample is located under [NP.Demos.NonVisualXamlSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.NonVisualXamlSample) solution. Unlike the previous samples - it is a console application referencing only one \(not three\) Avalonia nuget packages:
 
@@ -721,11 +794,128 @@ public class Person
 }
 ```
 
-#### XAML Topics not Covered in this Chapter
+### XAML Topics not Covered in this Chapter
 
-Avalonia Attached Properties, Bindings, Styles, Control and Data Templates will be covered for XAML in the same chapter in which we cover the corresponding concept.
+Avalonia Attached Properties, Bindings, Styles, Control and Data Templates will be covered for XAML in the same chapters in which we cover the corresponding concepts.
 
 ## Visual Trees
+
+Avalonia \(and WPF\) **basic** building blocks \(the primitives\) consist of:
+
+1. **Primitive elements** - the very basic elements like `TextBlock`, `Border`, `Path`, `Image`, `Viewbox`, etc. that cannot be decomposed into sub-elements within Avalonia universe.
+2. **Panels** - elements responsible for arranging other elements within them.
+
+The rest of the controls \(more complex controls including such basic controls as e.g., `Button`, `ComboBox`, `Menu`, etc.\) and complex views are built by putting the various primitives together by placing them within other primitives or panels. In Avalonia, the primitives usually inherit from `Control` class, while the more complex controls inherit from `TemplatedControl` class, while in WPF, the primitives inherit from `Visual` and the more complex controls inherit from `Control` \(in WPF, `Control` has the `Template` property and related infrastructure, while in Avalonia, it is `TemplatedControl` that has them\). You can read more about Avalonia primitives in [Avalonia Primitives ](https://www.codeproject.com/Articles/5308645/Multiplatform-UI-Coding-with-AvaloniaUI-in-Easy-Sa#AvaloniaPrimitives)section of the previous chapter.
+
+The composition of Avalonia \(and WPF\) visual object can be hierarchical: we create some simpler objects out of the primitives and then create more complex objects out of those simpler objects \(and perhaps also the primitives\), etc. This principle of hierarchical composition is one of the core ways or re-using the visual components.
+
+The figure below shows that a simple button might consist of several primitive elements: e.g., it might consist of a `Grid` panel that has a `TextBlock` object for the text of the button and an `Image` object for the button's icon. This containment structure of objects clearly defines a simple tree - the Visual Tree.
+
+Here is the figure of a very simple button described above:
+
+![Image 1](https://www.codeproject.com/KB/Articles/5311995/ButtonContainmentStructure_small.png)
+
+And here is the figure of the button's visual tree:
+
+![Image 2](https://www.codeproject.com/KB/Articles/5311995/ButtonVisualTree.png)
+
+Of course, the real button's visual trees might be more complex and also include borders for button's border and shade and an overlay panel or panels which change opacity or color once the mouse is over the button to indicate that this button is active on mouse click and many other things, but for the sake of explaining the concept of visual tree, the button described above is ok.
+
+Now start _NP.Demos.VisualTreeSample.sln_ solution. The only files changed from the default content in this solution are _MainWindow.axaml_ \(_.axaml_ files are very much the same as _.xaml_ files only used by Avalonia in order for them to coexist with WPF _.xaml_ files\) and _MainWindow.axaml.cs_. You can find more about the files in the AvaloniaUI application project at [Multiplatform UI Coding with AvaloniaUI in Easy Samples. "Creating and Running a Simple AvaloniaUI Project using Visual Studio 2019" section](https://www.codeproject.com/Articles/5308645/Multiplatform-UI-Coding-with-AvaloniaUI-in-Easy-Sa#SimpleProject).
+
+Here is the content of _MainWindow.xaml_:XAMLCopy Code
+
+```text
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.VisualAndLogicalTreeSample.MainWindow"
+        Title="NP.Demos.VisualAndLogicalTreeSample"
+        Width="300"
+        Height="200">
+  <Button x:Name="SimpleButton"
+          Content="Click Me" 
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center"/>
+</Window>  
+```
+
+Take a brief look also at _App.axaml_ file. You will see a reference to the `FluentTheme`:XAMLCopy Code
+
+```text
+<Application.Styles>
+    <FluentTheme Mode="Light"/>
+</Application.Styles>  
+```
+
+Themes define the look and behavior for all major controls, including, of course the buttons. They do it by using Styles and Templates, how exactly - will be explained later in these series of articles. It is important to understand, that our `Button`'s Visual Tree is defined by the `Button`'s `ControlTemplate` located within the `Button`'s style which is in turn located within the `FluentTheme`.
+
+Here is what you see when you run the project:
+
+![Image 3](https://www.codeproject.com/KB/Articles/5311995/VisualAndLogicalTreeSample.png)
+
+Click on the window for it to get the mouse focus and press the **F12** key. The Avalonia Tool window will open:
+
+![Image 4](https://www.codeproject.com/KB/Articles/5311995/ToolWindow.png)
+
+The tool window is analogous to WPF snoop \(even though it is still less powerful than WPF snoop in some aspects\). It gives you the ability to investigate any property or event on any element within the visual or logical trees.
+
+In Avalonia, logical tree \(an explanation of what it is will be provided shortly\) plays a bigger role than in WPF, so by default, the tool shows the Logical Tree, and in order to switch to the Visual Tree, you need to click "**Visual Tree**" tab \(highlighted in the image above by the read ellipse\).
+
+Once we switched the Tool to display the Visual Tree, press Control and Shift keys together and place the mouse over the button's text. The Visual Tree on the left side of the tool will expand to the element containing the `Button`'s text and the property pane in the middle of the tool will show the properties of the currently selected element of the Visual Tree \(which in our case will be the `Button`'s `TextBlock` element:
+
+![Image 5](https://www.codeproject.com/KB/Articles/5311995/ToolDisplayingVisualTree.png)
+
+The Visual Tree is actually shown for the whole window \(and part of it corresponding to the currently selected element is expanded\).
+
+You can see that the Visual Tree for the `Button` from the `FluentTheme` is actually even simpler than the one we considered above - it consists only of three elements - `Button` \(the root element\), then `ContentPresenter` and then `TextBlock` element:
+
+![Image 6](https://www.codeproject.com/KB/Articles/5311995/FluentButtonVisualTree.png)
+
+You can select a different element, say the `Button` - which is the grand parent of the `TextBlock` to see the `button`'s properties in the middle pane of the Tool. If you are looking for a particular property, e.g., `DataContext`, you can type part of its name on top of the property table, e.g., "`context`" and it will filter the properties to those whose names contain the word "`context`":
+
+![Image 7](https://www.codeproject.com/KB/Articles/5311995/ToolPropertyFiltering.png)
+
+More about the Tool will be said in the next section.
+
+Example of C\# functionality for obtaining the Visual Tree nodes is located within _MainWindow.xaml.cs_ file within `OnButtonClick` method:C\#Copy Code
+
+```text
+private void OnButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+{
+    IVisual parent = _button.GetVisualParent();
+
+    var visualAncestors = _button.GetVisualAncestors().ToList();
+
+    var visualChildren = _button.GetVisualChildren().ToList();
+
+    var visualDescendants = _button.GetVisualDescendants().ToList();
+}  
+```
+
+This method is attached to handle the button's click event:C\#Copy Code
+
+```text
+_button = this.FindControl<Button>("SimpleButton");
+
+_button.Click += OnButtonClick; 
+```
+
+Note that in order to make the Visual Tree extension methods available, we had to add `using Avalonia.VisualTree;` namespace reference at the top of _MainWindow.axaml.cs_ file.
+
+Put a breakpoint at the very end of the method, and click the button. You can investigate the content of the variables within `OnButtonClick()` method within a `Watch` window:
+
+![Image 8](https://www.codeproject.com/KB/Articles/5311995/VisualTreeVariables.png)
+
+You can see that the results are consistent with the Visual Tree observed in the Tool:
+
+![Image 9](https://www.codeproject.com/KB/Articles/5311995/ButtonVisualTreeHighlighted.png)
+
+Indeed,
+
+1. our `Button`'s parent is a `ContentPresenter`,
+2. our `Button` has four ancestors: `ContentPresenter`, `VisualLayoutManager`, `Panel` and `Window`,
+3. our `Button` has only one child - a `ContentPresenter`,
+4. and our `Button` has two descendants: a `ContentPresenter` and a `TextBlock`.
 
 ## Logical Trees
 
@@ -734,6 +924,8 @@ Avalonia Attached Properties, Bindings, Styles, Control and Data Templates will 
 ## Avalonia Bindings
 
 ## Routed Events
+
+also mention detecting routed events in Development Tool
 
 ## Commands, Calling C\# Methods from XAML
 
