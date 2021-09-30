@@ -283,12 +283,12 @@ var button = this.FindControl<Button>("CloseWindowButton");
 
 ### Very Brief Introduction to Markup Extensions
 
-Markup up extensions are some C\# classes that can significantly simplify XAML. They are used for setting some XAML properties using one liner notations that have curly brackets \('{' and '}'\) in them. There are some very important built-in Avalonia markup extensions - the most important are the following \(in the order of importance\):
+Markup up extensions are some C\# classes that can significantly simplify XAML. They are used for setting some XAML properties using one liner notations that have curly brackets \('{' and '}'\) in them. There are some very important built-in Avalonia markup extensions - the most important are the following:
 
-* StaticResource
-* Binding
-* x:Static
+* StaticResource 
 * DynamicResource
+* x:Static
+* Binding
 
 We are going to provide examples for all of them except for the Binding \(which will be explained in a future chapter where the corresponding Avalonia Binding concept is elucidated\).
 
@@ -297,6 +297,8 @@ One can also create custom markup extensions, but this is rarely used and will n
 ### Avalonia XAML Resources
 
 XAML resources is one of the most important methods of re-using XAML code and of placing some generic XAML code in generic Visual projects to be used in multiple applications.
+
+
 
 Referencing Assets \(e.g. images\).
 
