@@ -310,7 +310,7 @@ Open the solution and run it, here is what you will see:
 
 Pressing "Change Status Color" button will result in the third rectangle switching its color to red:
 
-![](../.gitbook/assets/image%20%2833%29.png)
+![](../.gitbook/assets/image%20%2835%29.png)
 
 Here is the MainWindow.xaml file for the sample:
 
@@ -461,11 +461,11 @@ In this sample we show how to refer to XAML resources located in a different fil
 
 The sample is located under [NP.Demos.XamlResourcesInMultipleProjects](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.AccessPropertiesInXamlSample) Visual Studio solution. After running the sample you will see 3 rectangles of different colors - red, green and blue:
 
-![](../.gitbook/assets/image%20%2830%29.png)
+![](../.gitbook/assets/image%20%2832%29.png)
 
 The solution consists of two projects - the main project NP.Demos.XamlResourcesInMultipleProjects and another project which the main project depends on - Dependency1Proj:
 
-![](../.gitbook/assets/image%20%2831%29.png)
+![](../.gitbook/assets/image%20%2833%29.png)
 
 RedBrush resource is defined within Themes/BrushResources.axaml file under Dependency1Proj:
 
@@ -480,11 +480,11 @@ RedBrush resource is defined within Themes/BrushResources.axaml file under Depen
 
 Note that the BrushResources.axaml file has "Avalonia XAML" build action \(as any Avalonia XAML resource file should\):
 
-![](../.gitbook/assets/image%20%2832%29.png)
+![](../.gitbook/assets/image%20%2834%29.png)
 
 Such files are created by choosing "Resource Dictionary \(Avalonia\)" template for Visual Studio new item creation:
 
-![](../.gitbook/assets/image%20%2834%29.png)
+![](../.gitbook/assets/image%20%2836%29.png)
 
 GreenBrush Avalonia Resource is defined within Themes/LocalBrushResources.axaml file \(this file is located in the main project\):
 
@@ -578,11 +578,11 @@ We have Themes/avalonia-32.png file under the dependent project Dependency1Proj 
 
 Note that the Build Action for the asset files should be "AvaloniaResource" \(unlike for XAML resource files where as we saw it was set to "Avalonia XAML"\):
 
-![](../.gitbook/assets/image%20%2824%29.png)
+![](../.gitbook/assets/image%20%2831%29.png)
 
 Build and run the sample, here is what you'll see:
 
-![](../.gitbook/assets/image%20%2835%29.png)
+![](../.gitbook/assets/image%20%2837%29.png)
 
 There are 4 vertically stacked images - here is the corresponding code:
 
@@ -655,6 +655,71 @@ public MainWindow()
 ```
 
 Note that even for the local file "LinuxIcon.jpg" \(file defined in the same project as the MainWindow.xaml.cs file that uses it\), we need to provide the full URL with "avares://&lt;assembly-name&gt;/" prefix.
+
+#### Non-Visual XAML Code
+
+The last sample will demonstrate that potentially one can use XAML even for a completely non-visual code. The sample is located under [NP.Demos.NonVisualXamlSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.NonVisualXamlSample) solution. Unlike the previous samples - it is a console application referencing only one \(not three\) Avalonia nuget packages:
+
+![](../.gitbook/assets/image%20%2824%29.png)
+
+The main program is located under Program.cs file and is very simple:
+
+```csharp
+        public static void Main(string[] args)
+        {
+            Course course = new Course();
+        }
+```
+
+You can put a breakpoint after the line and investigate the content of the course object:
+
+![](../.gitbook/assets/image%20%2830%29.png)
+
+Take a look at Course.axaml/Course.axaml.cs files. Here is the content of Course.axaml file:
+
+```markup
+<x:Object xmlns="https://github.com/avaloniaui"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:local="clr-namespace:NP.Demos.NonVisualXamlSample"
+          x:Class="NP.Demos.NonVisualXamlSample.Course"
+          NumberStudents="5">
+    <local:Person FirstName="Joe" LastName="Doe" Age="100" />
+</x:Object>
+```
+
+The top tag of type `Course` contains a single object of type `Person`. The `NumberStudents` property of the top object is set to 5, while the `Person's` properties are set `FirstName="Joe"`, `LastName="Doe"` and `Age="100"`.
+
+Course.axaml.cs file defines the properties for the `Course` class:
+
+```csharp
+public partial class Course
+{
+    public Course()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+
+    public int NumberStudents { get; set; }
+
+    [Content]
+    public Person? Teacher { get; set; }
+}
+```
+
+Note that its constructor also defines the method for loading the XAML file and that the class is marked as "partial" \(the other part is generated from XAML\). Also note that `Teacher` property has `ContentAttribute` - this is why we do not need to use `<local:Course.Teacher>` tag to place the `Person` object into.
+
+Finally, here is the code for `Person` class:
+
+```csharp
+public class Person
+{
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
+
+    public double Age { get; set; }
+}
+```
 
 ## Visual Trees
 
