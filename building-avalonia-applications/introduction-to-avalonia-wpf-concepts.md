@@ -310,7 +310,7 @@ Open the solution and run it, here is what you will see:
 
 Pressing "Change Status Color" button will result in the third rectangle switching its color to red:
 
-![](../.gitbook/assets/image%20%2831%29.png)
+![](../.gitbook/assets/image%20%2833%29.png)
 
 Here is the MainWindow.xaml file for the sample:
 
@@ -461,11 +461,11 @@ In this sample we show how to refer to XAML resources located in a different fil
 
 The sample is located under [NP.Demos.XamlResourcesInMultipleProjects](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.AccessPropertiesInXamlSample) Visual Studio solution. After running the sample you will see 3 rectangles of different colors - red, green and blue:
 
-![](../.gitbook/assets/image%20%2818%29.png)
+![](../.gitbook/assets/image%20%2830%29.png)
 
 The solution consists of two projects - the main project NP.Demos.XamlResourcesInMultipleProjects and another project which the main project depends on - Dependency1Proj:
 
-![](../.gitbook/assets/image%20%2824%29.png)
+![](../.gitbook/assets/image%20%2831%29.png)
 
 RedBrush resource is defined within Themes/BrushResources.axaml file under Dependency1Proj:
 
@@ -480,11 +480,11 @@ RedBrush resource is defined within Themes/BrushResources.axaml file under Depen
 
 Note that the BrushResources.axaml file has "Avalonia XAML" build action \(as any Avalonia XAML resource file should\):
 
-![](../.gitbook/assets/image%20%2830%29.png)
+![](../.gitbook/assets/image%20%2832%29.png)
 
 Such files are created by choosing "Resource Dictionary \(Avalonia\)" template for Visual Studio new item creation:
 
-![](../.gitbook/assets/image%20%2832%29.png)
+![](../.gitbook/assets/image%20%2834%29.png)
 
 GreenBrush Avalonia Resource is defined within Themes/LocalBrushResources.axaml file \(this file is located in the main project\):
 
@@ -557,18 +557,104 @@ Take a look at the Resources section of the window at the top of the file:
   </Window.Resources>
 ```
 
-`<ResourceInclude .../>` tags within `<ResourceDictionary.MergedDictionary>` tag means that we are merging the Resource Dictionaries defined externally to the current dictionary - they way we get all their key-value pairs. Those who know WPF can notice the difference - in WPF we user `<ResourceDictionary Source="..."/>` tag and not `<ResourceInclude Source="..."/>`. It is a purely notational \(not conceptual\) difference, but still needs to be remembered.
+`<ResourceInclude .../>` tags within `<ResourceDictionary.MergedDictionary>` tag means that we are merging the Resource Dictionaries defined externally to the current dictionary - they way we get all their key-value pairs. Those who know WPF can notice the difference - in WPF we user `<ResourceDictionary Source="..."/>` tag and not `<ResourceInclude Source="..."/>`. Also note that for a dependent project we do not separate the assembly from the rest of the URL and we are not using the cryptic "Component/" prefix for the URL. These are purely notational \(not conceptual\) differences, but still needs to be remembered.
 
 Note the Avalonia XAML urls for the merged files:
 
 * "avares://Dependency1Proj/Themes/BrushResources.axaml" - the url of the Avalonia XAML Resource file defined in a different project should start with the magic work "avares://" followed by the assembly name, followed by the path to the file: "avares://&lt;assembly-name&gt;/&lt;path-to-the-avalonia-resource\_file&gt;.
 * "/Themes/LocalBrushResources.axaml" - the url of the Avalonia XAML Resource file defined in the same project in which it is used, should only consist of a forward slash followed by the path to avalonia resource file from the root of the current project.
 
-At the end of the resource section, we define the BlushBrush resource - local to MainWindow.axaml file.
+At the end of the resource section, we define the BlueBrush resource - local to MainWindow.axaml file.
 
-Referencing Assets \(e.g. images\).
+#### Referencing Assets in XAML
 
-Pulling resources into C\# code.
+In Avalonia Lingo - Assets are usually binary image \(e.g. png or jpg\) files. In this section we shall show how to refer to such files from `Image` controls within XAML.
+
+The sample's code is located under [NP.Demos.ReferringToAssetsInXaml](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.XamlSamples/NP.Demos.ReferringToAssetsInXaml) solution. Here is the solution's code:
+
+![](../.gitbook/assets/image%20%2818%29.png)
+
+We have Themes/avalonia-32.png file under the dependent project Dependency1Proj and Themes/LinuxIcon.jpg file under the main project.
+
+Note that the Build Action for the asset files should be "AvaloniaResource" \(unlike for XAML resource files where as we saw it was set to "Avalonia XAML"\):
+
+![](../.gitbook/assets/image%20%2824%29.png)
+
+Build and run the sample, here is what you'll see:
+
+![](../.gitbook/assets/image%20%2835%29.png)
+
+There are 4 vertically stacked images - here is the corresponding code:
+
+```markup
+<Image Source="/Assets/LinuxIcon.jpg" 
+        Width="50"
+        Height="50"
+        Margin="5"/>
+<Image Source="avares://Dependency1Proj/Assets/avalonia-32.png"
+        Width="50"
+        Height="50"
+        Margin="5"/>
+<Image x:Name="LinuxIconImage2"
+        Width="50"
+        Height="50"
+        Margin="5"/>
+<Image x:Name="AvaloniaIconImage2"
+        Width="50"
+        Height="50"/>
+```
+
+For the first two images - the Source is set in XAML, for the last - in C\# code behind. 
+
+Note that the image defined as an asset local to the same project which contains our MainWindow.axaml file that uses it can use a simplified version of the source URL:
+
+```markup
+Source="/Assets/LinuxIcon.jpg" 
+```
+
+While the image located in a different project should be using a full version of the URL prepended with avares://
+
+```markup
+Source="avares://Dependency1Proj/Assets/avalonia-32.png"
+```
+
+Note, that just the same as in case of the XAML resource dictionary files and differently from WPF, the assembly name \("Dependency1Proj" - in our case\) is a part of the URL and there is no Component prefix.
+
+The `Source` property of the last two images is being set within MainWindow.axaml.cs code-behind file. Here is the relevant code:
+
+```csharp
+public MainWindow()
+{
+    InitializeComponent();
+    
+    ...
+
+    // get the asset loader from Avalonia container
+    var assetLoader = AvaloniaLocator.Current.GetService<IAssetLoader>();
+
+    // get the Image control from XAML
+    Image linuxIconImage2 = this.FindControl<Image>("LinuxIconImage2");
+
+    // set the image Source using assetLoader
+    linuxIconImage2.Source = 
+        new Bitmap
+        (
+            assetLoader.Open(
+                new Uri("avares://NP.Demos.ReferringToAssetsInXaml/Assets/LinuxIcon.jpg")));
+
+    // get the Image control from XAML
+    Image avaloniaIconImage2 = this.FindControl<Image>("AvaloniaIconImage2");
+
+    // set the image Source using assetLoader
+    avaloniaIconImage2.Source =
+        new Bitmap
+        (
+            assetLoader.Open(
+                new Uri("avares://Dependency1Proj/Assets/avalonia-32.png")));
+}
+```
+
+Note that even for the local file "LinuxIcon.jpg" \(file defined in the same project as the MainWindow.xaml.cs file that uses it\), we need to provide the full URL with avares:&lt;assembly-name&gt;/ prefix.
 
 ## Visual Trees
 
