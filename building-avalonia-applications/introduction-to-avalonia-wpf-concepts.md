@@ -721,6 +721,10 @@ public class Person
 }
 ```
 
+#### XAML Topics not Covered in this Chapter
+
+Avalonia Attached Properties, Bindings, Styles, Control and Data Templates will be covered for XAML in the same chapter in which we cover the corresponding concept.
+
 ## Visual Trees
 
 ## Logical Trees
