@@ -654,7 +654,7 @@ public MainWindow()
 }
 ```
 
-Note that even for the local file "LinuxIcon.jpg" \(file defined in the same project as the MainWindow.xaml.cs file that uses it\), we need to provide the full URL with avares:&lt;assembly-name&gt;/ prefix.
+Note that even for the local file "LinuxIcon.jpg" \(file defined in the same project as the MainWindow.xaml.cs file that uses it\), we need to provide the full URL with "avares://&lt;assembly-name&gt;/" prefix.
 
 ## Visual Trees
 
