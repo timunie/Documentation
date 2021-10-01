@@ -2110,11 +2110,11 @@ There are 3 different modes of propagation for the routed events:
 
 The following pictures depict bubbling and tunneling event propagation:
 
-![](https://www.codeproject.com/KB/cs/1017398/Bubble.png)
+![](../.gitbook/assets/image%20%2842%29.png)
 
 
 
-![](https://www.codeproject.com/KB/cs/1017398/Tunnel.png)
+![](../.gitbook/assets/image%20%2840%29.png)
 
 The Avalonia routed events are more powerful and logical than their WPF counterparts because in WPF the event has to choose only one of the routing strategies - it can either be direct or bubbling or tunneling. In order to allow some preprocessing before handing the main \(usually bubbling\) events many bubbling events have their tunneling peers firing before them - the so called Preview events. The preview events are completely different events in WPF and there is no logical connection \(aside from their names\) between them and the corresponding bubbling events. 
 
@@ -2124,9 +2124,203 @@ Do not worry if you are not a WPF expert and a bit confused about this discussio
 
 ### Built-In Routed Event Example
 
-There are many Routed Events that already exist in Avalonia \(as there are many built-in events in WPF\). 
+There are many Routed Events that already exist in Avalonia \(as there are many built-in events in WPF\). We will demonstrate the routing event propagation by using `PointerPressedEvent` routed event, which fires when a user presses mouse button on some visual element in Avalonia. WPF `LeftMouseButtonDown` routed event is very similar to `PointerPressedEvent`.
 
+The sample code is located under [NP.Demos.BuiltInRoutedEventSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.BuiltInRoutedEventSample) solution. 
 
+Take a look at the very simple MainWindow.axaml file:
+
+```markup
+<Window x:Name="TheWindow" 
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.BuiltInRoutedEventSample.MainWindow"
+        Title="NP.Demos.BuiltInRoutedEventSample"
+        Background="Red"
+        Width="200"
+        Height="200">
+  <Grid x:Name="TheRootPanel"
+        Background="Green"
+        Margin="35">
+      <Border x:Name="TheBorder"
+              Background="Blue"
+              Margin="35"/>
+  </Grid>
+</Window>
+```
+
+We have a `Window` \(with Red background\) containing a `Grid` with Green background containing a `Border` with Blue background.
+
+Run the project in the Visual Studio debugger - here is what you shall see:
+
+![](../.gitbook/assets/image%20%2841%29.png)
+
+Click on the blue square in the middle and take a look a the "Output" pane of the Visual Studio. Here is what you see there:
+
+```csharp
+Tunneling Routed Event PointerPressed raised on TheWindow; Event Source is TheBorder
+Tunneling Routed Event PointerPressed raised on TheRootPanel; Event Source is TheBorder
+Tunneling Routed Event PointerPressed raised on TheBorder; Event Source is TheBorder
+Bubbling Routed Event PointerPressed raised on TheBorder; Event Source is TheBorder
+Bubbling Routed Event PointerPressed raised on TheRootPanel; Event Source is TheBorder
+Bubbling Routed Event PointerPressed raised on TheWindow; Event Source is TheBorder
+```
+
+The event travels as the tunneling event from window to the blue border first and then as bubbling event in the opposite direction.
+
+Now take a look at MainWindow.axaml.cs file that contains all the code for handling the event and assigning the handlers:
+
+```csharp
+public partial class MainWindow : Window
+{
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        ...
+        
+        // add event handler for the Window
+        this.AddHandler
+        (
+            Control.PointerPressedEvent,
+            HandleClickEvent,
+            RoutingStrategies.Bubble | RoutingStrategies.Tunnel
+            //,true // uncomment if you want to test that the event still propagates event after being handled
+        );
+
+        Grid rootPanel = this.FindControl<Grid>("TheRootPanel");
+
+        // add event handler for the Grid
+        rootPanel.AddHandler
+        (
+            Control.PointerPressedEvent, 
+            HandleClickEvent,
+            RoutingStrategies.Bubble | RoutingStrategies.Tunnel);
+
+        Border border = this.FindControl<Border>("TheBorder");
+
+        // add event handler for the Blue Border in the middle
+        border.AddHandler(
+            Control.PointerPressedEvent,
+            HandleClickEvent,
+            RoutingStrategies.Bubble | RoutingStrategies.Tunnel);
+    }
+
+    private void HandleClickEvent(object? sender, RoutedEventArgs e)
+    {
+        Control senderControl = (Control) sender!;
+
+        string eventType = e.Route switch
+        {
+            RoutingStrategies.Bubble => "Bubbling",
+            RoutingStrategies.Tunnel => "Tunneling",
+            _ => "Direct"
+        };
+
+        Debug.WriteLine($"{eventType} Routed Event {e.RoutedEvent!.Name} raised on {senderControl.Name}; Event Source is {(e.Source as Control)!.Name}");
+
+        // uncomment if you want to test handling the event
+        //if (e.Route == RoutingStrategies.Bubble && senderControl.Name == "TheBorder")
+        //{
+        //    e.Handled = true;
+        //}
+    }
+}
+```
+
+We assign the handlers to the Window, Grid and Border by using `AddHandler` method. Let us take a close look at one of them:
+
+```csharp
+        // add event handler for the Window
+        this.AddHandler
+        (
+            Control.PointerPressedEvent, // routed event
+            HandleClickEvent, // event handler
+            RoutingStrategies.Bubble | RoutingStrategies.Tunnel // routing strategy filter
+        );
+```
+
+First argument to `AddHandler` is the Routed Event - a static object that contains a map of visual objects into event handlers. This is analogous to the AttachedProperty object maintaining a map of visual object into object values. Same as AttachedProperty, the RoutedEvent can be defined outside of the class and will not affect the memory except for objects that have handlers for it.
+
+Second argument is the event handler method `HandleClickEvent`. Here is the method implementation:
+
+```csharp
+    private void HandleClickEvent(object? sender, RoutedEventArgs e)
+    {
+        Control senderControl = (Control) sender!;
+
+        string eventTypeString = e.Route switch
+        {
+            RoutingStrategies.Bubble => "Bubbling",
+            RoutingStrategies.Tunnel => "Tunneling",
+            _ => "Direct"
+        };
+
+        Debug.WriteLine($"{eventTypeStr} Routed Event {e.RoutedEvent!.Name} raised on {senderControl.Name}; Event Source is {(e.Source as Control)!.Name}");
+
+        ...
+    }
+```
+
+All it does is just writing the sentence to Debug output \(for Visual Studio Debugger it means that it is writing it into the Output pane\).
+
+Third argument \(`RoutingStrategies.Bubble | RoutingStrategies.Tunnel`\) is the routing strategy filter. For example if you remove `RoutingStrategies.Tunnel` from it it will start reacting only to bubbling event run \(try doing it as an exercise\). By default it is set to `RoutingStrategies.Direct | RoutingStrategies.Bubble`.
+
+Note that all \(or almost all\) built-in Routed Events have their plain C\# event counterparts which are raised when the routed event is raised. We could have used eg. `PointerPressed` C\# event connecting it to `HandleClickEvent` handler:
+
+```csharp
+rootPanel.PointerPressed += HandleClickEvent;
+```
+
+But in that case we would not be able to choose the `RoutingStrategies` filtering \(it would have remained default - `RoutingStrategies.Direct | RoutingStrategies.Bubble`\). Also we would not be able to choose an important `handledEventsToo` argument which is going to be explained shortly.
+
+At the end of the `HandleClickEvent` method there are several extra commented out lines of code which you should uncomment now:
+
+```csharp
+// uncomment if you want to test handling the event
+if (e.Route == RoutingStrategies.Bubble && senderControl.Name == "TheBorder")
+{
+    e.Handled = true;
+}
+```
+
+The purpose of this code is to set the event to `Handled` once it does all the tunneling and bubbles first time on the border. Try running the application again and click on the Blue border. Here is what will print in the Output pane of the Visual Studio:
+
+```csharp
+Tunneling Routed Event PointerPressed raised on TheWindow; Event Source is TheBorder
+Tunneling Routed Event PointerPressed raised on TheRootPanel; Event Source is TheBorder
+Tunneling Routed Event PointerPressed raised on TheBorder; Event Source is TheBorder
+Bubbling Routed Event PointerPressed raised on TheBorder; Event Source is TheBorder
+```
+
+Since the event has been handled after the first bubbling on the border, the handlers higher up on the Visual Tree \(those on the Grid and Window\) will not be fired any more. There is however a way to force them to fire even on a routed event that had already been handled. For example, in order to do it on the Window level, uncomment the last argument of `AddHandler(...)` call on the Window:
+
+```csharp
+// add event handler for the Window
+this.AddHandler
+(
+    Control.PointerPressedEvent, //routed event
+    HandleClickEvent, // event handler
+    RoutingStrategies.Bubble | RoutingStrategies.Tunnel // routing strategy filter
+    ,true // uncomment if you want to test that the event still propagates event after being handled
+);
+```
+
+Last argument is called `handledEventsToo` and if it is `true` - it fires the corresponding handler also on events that had been handled before. By default it is `false`.
+
+After uncommenting, run the application again and press the mouse button on the Blue border. Here is what the output is going to be:
+
+```csharp
+Tunneling Routed Event PointerPressed raised on TheWindow; Event Source is TheBorder
+Tunneling Routed Event PointerPressed raised on TheRootPanel; Event Source is TheBorder
+Tunneling Routed Event PointerPressed raised on TheBorder; Event Source is TheBorder
+Bubbling Routed Event PointerPressed raised on TheBorder; Event Source is TheBorder
+Bubbling Routed Event PointerPressed raised on TheWindow; Event Source is TheBorder
+```
+
+The last line show that the bubbling pass of the event was handled on the window, even though the event had been handled before.
+
+### Custom Routed Event Sample
 
 ## Commands, Calling C\# Methods from XAML
 
