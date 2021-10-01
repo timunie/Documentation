@@ -813,19 +813,19 @@ The figure below shows that a simple button might consist of several primitive e
 
 Here is the figure of a very simple button described above:
 
-![Image 1](https://www.codeproject.com/KB/Articles/5311995/ButtonContainmentStructure_small.png)
+![](https://www.codeproject.com/KB/Articles/5311995/ButtonContainmentStructure_small.png)
 
 And here is the figure of the button's visual tree:
 
-![Image 2](https://www.codeproject.com/KB/Articles/5311995/ButtonVisualTree.png)
+![](https://www.codeproject.com/KB/Articles/5311995/ButtonVisualTree.png)
 
 Of course, the real button's visual trees might be more complex and also include borders for button's border and shade and an overlay panel or panels which change opacity or color once the mouse is over the button to indicate that this button is active on mouse click and many other things, but for the sake of explaining the concept of visual tree, the button described above is ok.
 
-Now start _NP.Demos.VisualTreeSample.sln_ solution. The only files changed from the default content in this solution are _MainWindow.axaml_ \(_.axaml_ files are very much the same as _.xaml_ files only used by Avalonia in order for them to coexist with WPF _.xaml_ files\) and _MainWindow.axaml.cs_. You can find more about the files in the AvaloniaUI application project at [Multiplatform UI Coding with AvaloniaUI in Easy Samples. "Creating and Running a Simple AvaloniaUI Project using Visual Studio 2019" section](https://www.codeproject.com/Articles/5308645/Multiplatform-UI-Coding-with-AvaloniaUI-in-Easy-Sa#SimpleProject).
+Now start [NP.Demos.VisualTreeSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.VisualTreeSample) solution. The only files changed from the default content in this solution are MainWindow.axaml \(.axaml files are very much the same as .xaml files only used by Avalonia in order for them to coexist with WPF .xaml files\) and MainWindow.axaml.cs. You can find more about the files in the AvaloniaUI application project at by reading ["Creating and Running a Simple Avalonia Application under Visual Studio"](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/#creating-and-running-a-simple-avalonia-application-under-visual-studio) guide.
 
-Here is the content of _MainWindow.xaml_:XAMLCopy Code
+Here is the content of MainWindow.xaml:
 
-```text
+```markup
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="NP.Demos.VisualAndLogicalTreeSample.MainWindow"
@@ -839,47 +839,47 @@ Here is the content of _MainWindow.xaml_:XAMLCopy Code
 </Window>  
 ```
 
-Take a brief look also at _App.axaml_ file. You will see a reference to the `FluentTheme`:XAMLCopy Code
+Take a brief look also at App.axaml file. You will see a reference to the `FluentTheme`:
 
-```text
+```markup
 <Application.Styles>
     <FluentTheme Mode="Light"/>
-</Application.Styles>  
+</Application.Styles>
 ```
 
-Themes define the look and behavior for all major controls, including, of course the buttons. They do it by using Styles and Templates, how exactly - will be explained later in these series of articles. It is important to understand, that our `Button`'s Visual Tree is defined by the `Button`'s `ControlTemplate` located within the `Button`'s style which is in turn located within the `FluentTheme`.
+Themes define the look and behavior for all major controls, including, of course the buttons. They do it by using Styles and Templates, how exactly - will be explained later in these series of the guides. It is important to understand, that our `Button`'s Visual Tree is defined by the `Button`'s `ControlTemplate` located within the `Button`'s style which is in turn located within the `FluentTheme`.
 
 Here is what you see when you run the project:
 
-![Image 3](https://www.codeproject.com/KB/Articles/5311995/VisualAndLogicalTreeSample.png)
+![](https://www.codeproject.com/KB/Articles/5311995/VisualAndLogicalTreeSample.png)
 
 Click on the window for it to get the mouse focus and press the **F12** key. The Avalonia Tool window will open:
 
-![Image 4](https://www.codeproject.com/KB/Articles/5311995/ToolWindow.png)
+![](https://www.codeproject.com/KB/Articles/5311995/ToolWindow.png)
 
-The tool window is analogous to WPF snoop \(even though it is still less powerful than WPF snoop in some aspects\). It gives you the ability to investigate any property or event on any element within the visual or logical trees.
+The tool window is analogous to [WPF snoop](https://github.com/snoopwpf/snoopwpf) \(even though it is still less powerful than WPF snoop in some aspects\). It gives you the ability to investigate any property or event on any element within the visual or logical trees.
 
 In Avalonia, logical tree \(an explanation of what it is will be provided shortly\) plays a bigger role than in WPF, so by default, the tool shows the Logical Tree, and in order to switch to the Visual Tree, you need to click "**Visual Tree**" tab \(highlighted in the image above by the read ellipse\).
 
 Once we switched the Tool to display the Visual Tree, press Control and Shift keys together and place the mouse over the button's text. The Visual Tree on the left side of the tool will expand to the element containing the `Button`'s text and the property pane in the middle of the tool will show the properties of the currently selected element of the Visual Tree \(which in our case will be the `Button`'s `TextBlock` element:
 
-![Image 5](https://www.codeproject.com/KB/Articles/5311995/ToolDisplayingVisualTree.png)
+![](https://www.codeproject.com/KB/Articles/5311995/ToolDisplayingVisualTree.png)
 
 The Visual Tree is actually shown for the whole window \(and part of it corresponding to the currently selected element is expanded\).
 
-You can see that the Visual Tree for the `Button` from the `FluentTheme` is actually even simpler than the one we considered above - it consists only of three elements - `Button` \(the root element\), then `ContentPresenter` and then `TextBlock` element:
+You can see that the Visual Tree for the `Button` from the `FluentTheme` is actually even simpler than the one we considered above: it consists only of the following three elements - `Button` \(the root element\), then `ContentPresenter` and then `TextBlock` element:
 
-![Image 6](https://www.codeproject.com/KB/Articles/5311995/FluentButtonVisualTree.png)
+![](https://www.codeproject.com/KB/Articles/5311995/FluentButtonVisualTree.png)
 
 You can select a different element, say the `Button` - which is the grand parent of the `TextBlock` to see the `button`'s properties in the middle pane of the Tool. If you are looking for a particular property, e.g., `DataContext`, you can type part of its name on top of the property table, e.g., "`context`" and it will filter the properties to those whose names contain the word "`context`":
 
-![Image 7](https://www.codeproject.com/KB/Articles/5311995/ToolPropertyFiltering.png)
+![](https://www.codeproject.com/KB/Articles/5311995/ToolPropertyFiltering.png)
 
 More about the Tool will be said in the next section.
 
-Example of C\# functionality for obtaining the Visual Tree nodes is located within _MainWindow.xaml.cs_ file within `OnButtonClick` method:C\#Copy Code
+Example of C\# functionality for obtaining the Visual Tree nodes in C\# code is located within MainWindow.xaml.cs file within `OnButtonClick` method:
 
-```text
+```csharp
 private void OnButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
 {
     IVisual parent = _button.GetVisualParent();
@@ -892,36 +892,1204 @@ private void OnButtonClick(object? sender, Avalonia.Interactivity.RoutedEventArg
 }  
 ```
 
-This method is attached to handle the button's click event:C\#Copy Code
+This method is attached to handle the button's click event:
 
-```text
+```csharp
 _button = this.FindControl<Button>("SimpleButton");
 
 _button.Click += OnButtonClick; 
 ```
 
-Note that in order to make the Visual Tree extension methods available, we had to add `using Avalonia.VisualTree;` namespace reference at the top of _MainWindow.axaml.cs_ file.
+Note that in order to make the Visual Tree extension methods available, we had to add `using Avalonia.VisualTree;` namespace reference at the top of MainWindow.axaml.cs file.
 
 Put a breakpoint at the very end of the method, and click the button. You can investigate the content of the variables within `OnButtonClick()` method within a `Watch` window:
 
-![Image 8](https://www.codeproject.com/KB/Articles/5311995/VisualTreeVariables.png)
+![](https://www.codeproject.com/KB/Articles/5311995/VisualTreeVariables.png)
 
 You can see that the results are consistent with the Visual Tree observed in the Tool:
 
-![Image 9](https://www.codeproject.com/KB/Articles/5311995/ButtonVisualTreeHighlighted.png)
+![](https://www.codeproject.com/KB/Articles/5311995/ButtonVisualTreeHighlighted.png)
 
 Indeed,
 
 1. our `Button`'s parent is a `ContentPresenter`,
-2. our `Button` has four ancestors: `ContentPresenter`, `VisualLayoutManager`, `Panel` and `Window`,
+2. our `Button` has four ancestors: `ContentPresenter`, `VisualLayoutManager`, `Panel` and `Window`
 3. our `Button` has only one child - a `ContentPresenter`,
 4. and our `Button` has two descendants: a `ContentPresenter` and a `TextBlock`.
 
+## Avalonia Tool
+
+Once we mentioned the Avalonia Tool in the previous section, let us give a bit more information about it here.
+
+The beauty of the tool is that it is also written in Avalonia and therefore it is multiplatform. It will also show on MacOS and Linux if you want to check the trees and the properties on those platforms - all you need to do is to click on the window for which you want the tool to work and press the **F12** key.
+
+The tool shows only the information corresponding to a single window, so if you are using multiple windows whose trees and properties you want to investigate, you'll have to use multiple tool windows.
+
+The tool will not show up for a configuration that does not have `DEBUG` preprosessor variable set, for example, the default release configuration. In fact, the following lines from the `MainWindow` constructor \(located in _MainWindow.axaml.cs_ file\) create the ability to start the tool:
+
+```csharp
+#if DEBUG
+            this.AttachDevTools();
+#endif  
+```
+
+Also if you do not need the tool, once you remove the call to `this.AttachDevTool()`, you can also remove `Avalonia.Diagnostics` package from your references.
+
 ## Logical Trees
+
+Logical Tree is a subset of the Visual Tree - it is sparser than the Visual Tree - has fewer elements in it. It closely follows the XAML code, but it does not expand any control templates \(what they are will be explained in a future article\). When a `ContentControl` is displayed, it goes straight from the `ContentControl` to the element that represents its `Content` \(omitting everything in between\). When an `ItemsControl` is displayed, it goes straight from the `ItemsControl` element to the elements that represent the contents of its items, also omitting everything in between. More detailed explanations of this will be given in the chapter dedicated to DataTemplates and View Models.
+
+The code is located under [NP.Demos.LogicalTreeSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.LogicalTreeSample) solution. This is what you are going to see once you run it:
+
+![](https://www.codeproject.com/KB/Articles/5311995/LogicalTreeSample.png)
+
+Here is the XAML code producing this layout from MainWindow.axaml file:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.LogicalTreeSample.MainWindow"
+        Title="NP.Demos.LogicalTreeSample"
+        Width="300"
+        Height="200">
+
+  <Grid RowDefinitions="*, *">
+    <Button x:Name="ClickMeButton" 
+            Content="Click Me"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"/>
+
+    <ItemsControl Grid.Row="1"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+      <Button x:Name="Item1Button" 
+              Content="Item1 Button"/>
+      <Button x:Name="Item2Button"
+              Content="Item2 Button"/>
+    </ItemsControl>
+  </Grid>
+</Window>  
+```
+
+We see that the window's content is represented by the `Grid` panel with two rows. Top row contains the `Button` "Click Me" and the bottom row contains an `ItemsControl` with two buttons: "Item1 Button" and "Item2 Button". The XAML names of the buttons are the same as what is written in them only without spaces: "`ClickMeButton`", "`Item1Button`" and "`Item2Button`".
+
+Click on the sample's window, then press **F12** to start the Tool and expand the Logical Tree within the tool - here is what you'll see:
+
+![](https://www.codeproject.com/KB/Articles/5311995/LogicalTreeTool.png)
+
+You can see that only the elements that correspond to XAML tags of MainWindow.axaml file are present in the visual tree plus the `TextBoxes` within the `Buttons` \(since the button is a `ContentControl` - the `TextBoxes` are elements that represent its content\). Many nodes that would be present in the Visual Tree are missing here - you will not find here Visual Tree elements that were created due to the expansion of the control templates - there are no Window's borders, Panels, `VisualLayoutManager`, etc., we skip from Window straight to the `Grid` because `Grid` element is part of MainWindow.axaml file. Likewise, we skip from the `Button` straight to the `TextBlock` omitting the `ContentPresenter` since it comes from the `Button's` Template expansion.
+
+Now take a look at `OnButtonClick` method within MainWindow.axaml.cs file
+
+```csharp
+private void OnButtonClick(object? sender, RoutedEventArgs e)
+{
+    ItemsControl itemsControl = 
+                    this.FindControl<ItemsControl>("TheItemsControl");
+
+    var logicalParent = itemsControl.GetLogicalParent();
+    var logicalAncestors = itemsControl.GetLogicalAncestors().ToList();
+    var logicalChildren = itemsControl.GetLogicalChildren().ToList();
+    var logicalDescendants = itemsControl.GetLogicalDescendants().ToList();
+}  
+```
+
+We are getting the logical parent, ancestors, children and descendants of the `ItemsControl` element. This method is set to be a `Click` event handler of the `ClickMeButton`:
+
+```csharp
+Button clickMeButton = this.FindControl<Button>("ClickMeButton");
+clickMeButton.Click += OnButtonClick;  
+```
+
+Note that in order to get those extension methods, we had to add `using Avalonia.LogicalTree` namespace at the top of MainWindow.xaml.cs file.
+
+Put a breakpoint, at the very end of the method, run the application and press "ClickMeButton". Check the variables in the **Watch** window:
+
+![](https://www.codeproject.com/KB/Articles/5311995/LogicalTreeNavigation.png)
+
+Which corresponds exactly to what we saw in the Tool.
 
 ## Avalonia Special Properties
 
+### Attached Properties
+
+Attached Properties is an extremely important and useful concept to understand. It was originally introduced by WPF and from there, it got straight to Avalonia, though in a better and expanded version.
+
+In order to explain what Attached Property is, let us start by remembering what a simple read/write property is in C\#. Essentially a property of type `T` defined in a class `MyClass` can be represented by two methods - a getter and a setter methods:
+
+```csharp
+public class MyClass<Т>
+{
+  T Getter();
+  void Setter(T value);
+}
+```
+
+Usually, such property is implemented by a backing field of type `T` defined within the same class:
+
+```csharp
+public class MyClass<T>  
+{
+  // the backing field
+  T _val;
+
+  T Getter() => _val;
+  void Setter(T value) => _val = value;
+} 
+```
+
+During the work on WPF, the WPF architects were facing an interesting problem. Every visual object had to define hundreds if not thousands of properties, most of which at each time would have default values. Defining a backing field for each property within each object would lead to a huge consumption of memory especially unnecessary because ~90% of those properties at each time would have a default value in them.
+
+So, to get around this problem, they came up with the the so called Attached Properties. Instead of storing the property value in a backing field inside the object, the Attached Property stores the values in a kind of a `static hashtable` or `Dictionary` \(or `Map`\) where the values are indexed by the various objects that have those properties. Only the objects with non-default property values are within the `hashtable`, if the entry for an object is not in the `hashtable`, it is assumed that the object's property has the default value. The static hash table of the Attached Property can be defined practically in any class - often, it is defined in a different class than the one that uses its values. So very **roughly** \(and approximately\) speaking - the implementation of an attached property `MyAttachedProperty` of type say `double` on class `MyClass` would be somewhat like:
+
+```csharp
+public class MyClass
+{
+
+}
+
+public static class MyAttachedPropertyContainer
+{
+    // Attached Property's default value
+    private static double MyAttachedPropertyDefaultValue = 5.0;
+
+    // Attached Property's Dictionary
+    private static Dictionary<MyClass, double> MyAttachedPropertyDictionary =
+                                              new Dictionary<MyClass, double>();
+
+    // property getter
+    public static double GetMyAttachedProperty(this MyClass obj)
+    {
+        if (MyAttachedPropertyDictionary.TryGetValue(obj, out double value)
+        {
+            return value;
+        }
+        else // there is no entry in the Dictionary for the object
+        {
+            return MyAttachedPropertyDefaultValue; // return default value
+        }
+    }
+
+    // property setter
+    public static SetMyAttachedProperty(this MyClass obj, double value)
+    {
+        if (value == MyAttachedPropertyDefaultValue)
+        {
+           // since the property value on this object 'obj' should become default,
+           // we remove this object's entry from the Dictionary -
+           // once it is not found in the Dictionary, - the default value will be returned
+           MyAttachedPropertyDictionary.Remove(obj);
+        }
+        else
+        {
+            // we set the object 'to have' the passed property value
+            // by setting the Dictionary cell corresponding to the object
+            // to contain that value
+            MyAttachedPropertyDictionary[obj] = value;
+        }
+    }
+}
+```
+
+So instead of each object of type `MyClass` containing the value, the value is located in some `static Dictionary` indexed by the objects of the type `MyClass`. One can also specify some default value for the property \(in our case, it is 5.0\) so that only objects with non-default property value will require an entry in the `Dictionary`.
+
+Such approach saves tons of memory at the expense of slightly slower getter and setter for the property.
+
+Once the Attached Properties were tried, it was discovered that on top of memory saving, they give a lot of other benefits - e.g.:
+
+* You can easily add some property change notification callbacks to them which will fire once the property changes on an object.
+* You can define an attached property on a class without modifying the class itself. This is extremely important. A glaring example - is the usual button does not have a `CornerRadius` property. Assume that you have many buttons of different types in your application and suddenly, the users request that many of them should have some smooth border corners and besides different button should have different corner radiuses. You do not want to create a new derived type for the buttons and replace them everywhere and retest every one of them, but you are ok with slightly modifying the buttons' styles. You can create the Attached Property `TheCornerRadiusProperty`, bind the buttons' borders' `CornerRadius` property `TheCornerRadiusProperty` of the button and set this property to the required values within individual buttons' styles.
+* Generalizing the previous item, the Attached Properties allow creating and attaching behaviors to the visual objects - behaviors are complex classes that allow modifying and augmenting the visual object's functionality without modifying the visual object's class. Behaviors are a bit too complex for this chapter and will be described in the future.
+
+Of course, the very simple implementation shown above, did not take into consideration a lot of other issues like threading, callbacks, registration \(in order to know all the attached properties allowed on our class `MyClass`\) and so on. Besides, it is ugly to define the default value as a `static` variable by itself outside of the property as we did above. Because of these considerations, it makes sense to create a special type \(possibly with some generic arguments\) `AttachedProperty<...>` which will contain the `Dictionary`, the default value and a lot of other functionality required for the property to function. This is what WPF and Avalonia did.
+
+Before we move on to the Attached Property sample, it is a good idea to download the Avalonia snippets available at [Avalonia Snippets](https://github.com/npolyak/NP.Avalonia.Visuals/tree/main/AvaloniaSnippets) and install them. Installation instructions can be found at the same URL.
+
+The Attached Property sample is located under [NP.Demos.AttachedPropertySample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.AttachedPropertySample) solution. Try running it. Here is what you'll see:
+
+![](https://www.codeproject.com/KB/Articles/5311995/AttachedPropSample.png)
+
+The slider changes can change between values `0` and `10` and when you change the slider position, the `StrokeThickness` property of the rectangle changes correspondingly - the rectangle become thicker or thinner \(when slider position is at `0`, rectangle disappears completely\).
+
+Take a look at the contents of AttachedProperties.cs file - the `RectangleStrokeThickness` Attached Property is defined there. This property was created by using _avap_ snippet \(its name stands for Avalonia Attached Property\):
+
+```csharp
+public static class AttachedProperties
+{
+    #region RectangleStrokeThickness Attached Avalonia Property
+
+    // Attached Property Getter
+    public static double GetRectangleStrokeThickness(AvaloniaObject obj)
+    {
+        return obj.GetValue(RectangleStrokeThicknessProperty);
+    }
+
+    // Attached Property Setter
+    public static void SetRectangleStrokeThickness(AvaloniaObject obj, double value)
+    {
+        obj.SetValue(RectangleStrokeThicknessProperty, value);
+    }
+
+    // Static field that of AttachedProperty<double> type. This field contains the
+    // Attached Properties' Dictionary, the default value and the rest of the required 
+    // functionality
+    public static readonly AttachedProperty<double> RectangleStrokeThicknessProperty =
+        AvaloniaProperty.RegisterAttached<object, Control, double>
+        (
+            "RectangleStrokeThickness", // property name
+            3.0 // property default value
+        );
+
+    #endregion RectangleStrokeThickness Attached Avalonia Property
+}  
+```
+
+We can see that:
+
+* `public static double GetRectangleStrokeThickness(AvaloniaObject obj)` is the getter \(similar to the one in discussion above\),
+* `public static void SetRectangleStrokeThickness(AvaloniaObject obj, double value)` is the setter.
+* `public static readonly AttachedProperty<double> RectangleStrokeThicknessProperty</double>` is the `static` field containing the `Dictionary` \(or object to value `hashtable`\) and the Attached Property's default value and all the rest of the needed functionality.
+
+The amount of code needed to define an Attached Property looks formidable, but it was all created within a couple of seconds with the help of the _avap_ snippet. So if you plan to work with Avalonia - snippets are a must \(same as in WPF\). You can also see that my snippet puts each Attached Property within its own region, so that it can be collapsed and the code can be made more readable.
+
+Now, take a look at the XAML code inside MainWindow.cs file:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NP.Demos.AttachedPropertySample"
+        x:Class="NP.Demos.AttachedPropertySample.MainWindow"
+        Title="NP.Demos.AttachedPropertySample"
+        local:AttachedProperties.RectangleStrokeThickness="7"
+        Width="300"
+        Height="300">
+  <Grid RowDefinitions="*, Auto">
+        <Rectangle Width="100"
+                   Height="100"
+                   Stroke="Green"
+                   StrokeThickness="{Binding Path=(local:AttachedProperties.RectangleStrokeThickness), 
+                                             RelativeSource={RelativeSource AncestorType=Window}}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+    
+      <Slider Minimum="0"
+              Maximum="10"
+              Grid.Row="1"
+              Value="{Binding Path=(local:AttachedProperties.RectangleStrokeThickness), 
+                              Mode=TwoWay, 
+                              RelativeSource={RelativeSource AncestorType=Window}}"
+              Margin="10,20"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Width="150"/>
+  </Grid>
+</Window>  
+```
+
+Note that in XAML, we are using Bindings - a very important concept that will be explained later in more detail.
+
+We have a `Grid` panel with two rows - there is a `Rectangle` in the top row and a `Slider` control at the bottom. The `Slider` can change its value between `0` and `10`.
+
+At almost the very top - there is the following line within the `Window` XAML tag:
+
+```markup
+xmlns:local="clr-namespace:NP.Demos.AttachedPropertySample"  
+```
+
+This line defines the local XAML namespace so that via that namespace, we can refer to our `RectangleStrokeThickness` Attached Property.
+
+The next interesting line is:
+
+```text
+local:AttachedProperties.RectangleStrokeThickness="7"  
+```
+
+Here, we are setting the initial value of the `RectangleStrokeThickness` Attached Property on the window object to number `7`. Note how we specify the Attached Property: `<namespace-name>:<class-name>.<AttachedProperty-name>`.
+
+The line
+
+```markup
+StrokeThickness="{Binding Path=(local:AttachedProperties.RectangleStrokeThickness), 
+                          RelativeSource={RelativeSource AncestorType=Window}}"
+```
+
+under `Rectangle` tag binds the rectangle's property `StrokeThickness` to the Attached Property `RectangleStrokeThickness` on the window ancestor of the rectangle. Note the format of the Attached Property within the `Binding` - the Attached Property full name is within parentheses - this is a requirement both in Avalonia and WPF - without parentheses, the binding will not work and people can spend hours trying to figure out what is wrong.
+
+`Slider`'s line:
+
+```markup
+Value="{Binding Path=(local:AttachedProperties.RectangleStrokeThickness), 
+                Mode=TwoWay, 
+                RelativeSource={RelativeSource AncestorType=Window}}"  
+```
+
+binds the `Value` property of the `Slider` to the `RectangleStrokeThickness` Attached Property of the window ancestor of the slider \(which of course is the same `Window` object as the window ancestor of the `Rectangle`\). This binding is a `TwoWay` binding - meaning changes to the `Slider`'s `Value` property will also change the `RectangleStrokeThickness` Attached Property value on the `Window`.
+
+The principle of operation of this view is simple - changing the `Slider's` value by moving the `Slider's` so called thumb - will trigger the change of the `RectangleStrokeThickness` Attached Property on the Window \(via the Slider's binding\) and this, in turn, will trigger the change of the `StrokeThickness` property on the `Rectangle` \(via its binding\).
+
+Of course, in this simple case, we could have connected the `Slider`'s `Value` to the `Rectangle`'s `StrokeThickness` property directly without involving the Attached Property on the Window, but then the example would not demonstrate how Attached Properties work \(and in many cases, e.g., when a needed property does not exist on a control Attached Properties are a must\).
+
+Now try removing the line that sets initial value to 7 at the top:
+
+```markup
+local:AttachedProperties.RectangleStrokeThickness="7"  
+```
+
+and restart the application. You will see that the initial value of the `Rectangle's` `StrokeThickness` and the `Slider`'s `Value` became `3.0` and not `7.0`. This is because the default value for our Attached Property is `3.0` as was defined when the Attached Property was registered.
+
+Now let us discuss the Attached Properties change notification.
+
+Take a look at the file MainWindow.axaml.cs: here is the interesting code from that file:
+
+```csharp
+public partial class MainWindow : Window
+{
+    // to stop change notification dispose of this subscription token
+    private IDisposable _changeNotificationSubscriptionToken;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        ...
+
+        // subscribe
+        _changeNotificationSubscriptionToken =
+            AttachedProperties
+                .RectangleStrokeThicknessProperty
+                .Changed
+                .Subscribe(OnRectangleStrokeThicknessChanged);
+    }
+
+    // this method is called when the Attached property changes
+    private void OnRectangleStrokeThicknessChanged
+    (
+        AvaloniaPropertyChangedEventArgs<double> changeParams)
+    {
+        // if the object on which this attached property changes
+        // is not this very window, do not do anything
+        if (changeParams.Sender != this)
+        {
+            return;
+        }
+
+        // check the old and new values of the attached property. 
+        double oldValue = changeParams.OldValue.Value;
+
+        double newValue = changeParams.NewValue.Value;
+    }  
+
+    ...
+}
+```
+
+At the top, we define the subscription token - it is `IDisposable` so if we want to stop reacting to the subscription change, we can call `_changeNotificationSubscriptionToken.Dispose()`.
+
+Subscription to the Attached Property changes happens in the constructor:
+
+```csharp
+// subscribe
+_changeNotificationSubscriptionToken =
+    AttachedProperties
+        .RectangleStrokeThicknessProperty
+        .Changed
+        .Subscribe(OnRectangleStrokeThicknessChanged);  
+```
+
+And the method `void OnRectangleStrokeThicknessChanged(...)` is called when the value changes. The method accepts a single argument of type `AvaloniaPropertyChangedEventArgs<double>` and this argument contains all required information:
+
+1. The object on which the Attached Property changed provide by the property `Sender`
+2. `OldValue` property carries information about the previous value.
+3. `NewValue` property carries information about the current value.
+
+You can put a debug breakpoint at the end of the method, start the application on the debugger and try to move the slider - you will stop on the breakpoint and will be able to investigate the current values.
+
+Another, easier way of doing approximately the same \(without ability to terminate the subscription\) is by creating a `static` constructor within MainWindow.axaml.cs file and using the `AddClassHandler` extension method:
+
+```csharp
+static MainWindow()
+{
+    AttachedProperties
+        .RectangleStrokeThicknessProperty
+        .Changed
+        .AddClassHandler<MainWindow>((x, e) => x.OnAttachedPropertyChanged(e));
+}
+
+private void OnAttachedPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+{
+    double? oldValue = (double?) e.OldValue;
+
+    double? newValue = (double?)e.NewValue;
+}  
+```
+
+Note that here, you do not need to check that the sender is the same as the current object.
+
+You can see that `OnAttachedPropertyChanged(...)` method has a slightly less type safe signature. Usually, this way is perfectly good and 99% of times, you'll be able to achieve what you need using `AddClassHandler(...)`.
+
+As you probably noticed, Avalonia is using a powerful `IObservable` Reactive Extensions paradigm when it comes to the Attached Properties change notifications.
+
+### Style Properties
+
+WPF has a concept of Dependency Properties which are basically the same as Attached Properties, only they are defined within the same class that uses them and correspondingly their getters and setter are placed within the `class's` property of the same name. Note that with Dependency Properties, we still have the advantage of not wasting memory on defaults and adding callbacks easily, but we lose the advantage of adding a property without modifying the class.
+
+I tried using locally defined Attached Properties in Avalonia, and I have not noticed anything wrong with them, but according to Avalonia documentation, it is better to use the so called Style Properties instead \(why - I am not sure at this point\).
+
+We shall follow the documentation and run a sample showing how to use the so called Style Properties.
+
+For the sample, open [NP.Demos.StylePropertySample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.StylePropertySample) solution.
+
+The sample will run in exactly the same fashion as the previous one and the code is very similar, only instead of using `RectangleStrokeThickness` Attached Property defined in _AttachedProperties.cs_ file, we are using the Style Property of the same name defined within MainWindow.axaml.cs file. You can see that the getter and the setter of the `Style` Property are non-static and are considerably simpler:
+
+```csharp
+#region RectangleStrokeThickness Styled Avalonia Property
+public double RectangleStrokeThickness
+{
+    // getter 
+    get { return GetValue(RectangleStrokeThicknessProperty); }
+
+    // setter
+    set { SetValue(RectangleStrokeThicknessProperty, value); }
+}
+
+// the static field that contains the hashtable mapping the 
+// object of type MainWindow into double and also containing the 
+// information about the default value
+public static readonly StyledProperty<double> RectangleStrokeThicknessProperty =
+    AvaloniaProperty.Register<MainWindow, double>
+    (
+        nameof(RectangleStrokeThickness)
+    );
+#endregion RectangleStrokeThickness Styled Avalonia Property  
+```
+
+This `style` property was also created in seconds by using my other snippet - _avsp_ that stands for Avalonia Style Property. In XAML style properties are accessed in exactly the same way as the usual properties - since they have usual getter and setter.
+
+### Direct Properties
+
+Sometimes, one wants to use a simple C\# property backed by a field, and yet to be able to subscribe to its changes and to use the property as a target of some binding - **yes only Attached, Style and Direct properties can be used as targets of the Avalonia bindings**. The simple C\# properties can still be used as the **source** of the bindings, through, providing the change notification via firing the `PropertyChanged` event of `INotifyPropertyChanged` interface.
+
+The direct property sample is located in [NP.Demos.DirectPropertySample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.DirectPropertySample) solution. The demo behaves in exactly the same way as the previous two demos, only we are using the Direct Property instead of `Style` or Attached Property.
+
+Here is how the Direct Property is defined within the MainWindow.xaml.cs file:
+
+```csharp
+#region RectangleStrokeThickness Direct Avalonia Property
+private double _RectangleStrokeThickness = default;
+
+public static readonly DirectProperty<MainWindow, double> RectangleStrokeThicknessProperty =
+    AvaloniaProperty.RegisterDirect<MainWindow, double>
+    (
+        nameof(RectangleStrokeThickness),
+        o => o.RectangleStrokeThickness,
+        (o, v) => o.RectangleStrokeThickness = v
+    );
+
+public double RectangleStrokeThickness
+{
+    get => _RectangleStrokeThickness;
+    set
+    {
+        SetAndRaise(RectangleStrokeThicknessProperty, ref _RectangleStrokeThickness, value);
+    }
+}
+
+#endregion RectangleStrokeThickness Direct Avalonia Property  
+```
+
+This Direct Property was created in seconds, by using _avdr_ snippet \(its name stands for Avalonia Direct\).
+
+#### More Information about Attached, Style and Direct Properties
+
+`AttachedProperty<...>`, `StyleProperty<...>` and `DirectProperty<...>` classes all derive from `AvaloniaProperty` class.
+
+As was mentioned above, only Attached, Style and Direct Properties can be made a target of Avalonia UI bindings.
+
+The Attached, Style and Direct Properties can only be set on classes that implement `AvaloniaObject` - which is a very basic class that all Avalonia visuals implement.
+
+If you do not need the previous value of a changed variable \(`OldValue` in the samples we had above\), the best way to subscribe to the changes of Attached, Style and Direct properties would be to use the `AvaloniaObject.GetObservable(AvaloniaProperty property)` method.
+
+To demonstrate using `GetObservable(...)` method we can modify our Attached Property sample as follows:
+
+```csharp
+public MainWindow()
+{
+...
+_changeNotificationSubscriptionToken =
+    this.GetObservable(AttachedProperties.RectangleStrokeThicknessProperty)
+        .Subscribe(OnStrokeThicknessChanged);
+}
+
+private void OnStrokeThicknessChanged(double newValue)
+{
+...
+}
+```
+
+You can see that `OldValue` is no longer available within the callback.
+
 ## Avalonia Bindings
+
+### **What is a Binding in Avalonia UI and WPF and Why It Is Needed**
+
+Binding is an extremely powerful concept that allows to bind two properties so that when one of them changes, the other will change also. Usually, binding works from the `source` property to the `target` property \(normal `OneWay` binding\), but there is also a `TwoWay` binding which makes sure that the two properties are in sync whichever initiates the change. There are two more binding modes: `OneWayToSource` and `OneTime` which are used considerably less often.
+
+There are also less discussed, but just as important **collection bindings** where one collection would mimic another or the two collections would mimic each other.
+
+Note that the target of the binding does not have to be exactly the same the binding's source, there can be conversion employed between the source and the target and vice versa as will be shown below.
+
+Binding is the main concept behind the so called MVVM pattern \(which will be discussed in detail in one of the future guides\). The core idea of the MVVM pattern is that the complex Visual Objects are mimicking the properties and behaviors of very simple non-Visual objects - the so called View Models \(VMs\):
+
+![](https://www.codeproject.com/KB/Articles/5311995/Mimicking.jpg)
+
+Because of that, most of the business logic can be developed and tested on simple non-visual objects and then transmitted by the bindings to the very complex visual object which will automatically behave in the similar fashion.
+
+### **Good Things about the Avalonia Bindings**
+
+Avalonia bindings are considerably more powerful, less buggy and quirky and easier to use than WPF bindings - the reason is that they have been built much more recently by very bright people \(or person\) [Steven Kirk](https://github.com/grokys) who apparently loved the WPF bindings, knew about their quirks and limitations and moreover knew about more recent advances in software development theory and practice - [Reactive Extensions](http://reactivex.io/).
+
+### **Avalonia Binding Concepts**
+
+Avalonia Binding is a complex object with many capabilities some of the most important of which, I will discuss in this subsection.
+
+Avalonia \(and WPF\) bindings are best explained by the figure below:
+
+![](https://www.codeproject.com/KB/Articles/5311995/PropertyBinding.png)
+
+Following parts of the Binding class are important:
+
+1. **Binding Source Object** - The object through which one can obtain the path to the binding source property.
+2. **Binding Target Object** - The object whose `AvaloniaProperty` \(Attached, Style or Direct\) property serves as a target for the binding. Target Object can only be of class derived from `AvaloniaObject` \(which means it can be any of the Avalonia visuals\). `AvaloniaObject` is analogous to the `DependencyObject` of WPF.
+3. **Binding Path** - Path from the source object to the source property. Path consists of path links, each of which can be a regular \(C\#\) property or an Avalonia Property. In XAML Bindings, Avalonia Properties should be in parentheses. Here is an example of a binding's path in XAML: `MyProp1.(local:AttachedProperties.AttachedProperty1).MyProp2`. This path means find regular C\# property `MyProp1` on the source object, then find attached property `AttachedProperty1` \(defined within class `AttachedProperties` of local namespace\) within the object returned by the first link, and then find the regular C\# property `MyProp2` within that attached property value.
+4. **Target property** - can only be one of Attached, Style or Direct Property kinds.
+5. **Binding Mode** can be:
+   1. `OneWay` - from source to target
+   2. `TwoWay` - when either source or target change, the other will also get updated.
+   3. `OneWayToSource` - when target is updated, the source is also updated, but not vice versa.
+   4. `OneTime` - syncs the target from the source only once - during the initialization.
+   5. `Default` - relies on the target property's preferred binding mode. When Attached Style or Direct Property is initialized, one can specify the preferred binding mode, which will be used in this case \(when `BindingMode` is not specified within the binding itself\).
+6. **Converter** - only needed if source and target value are different. It is used to convert values from source to target and vice versa. For usual bindings, the converter should implement `IValueConverter` interface.
+
+There is also a so called `MultiBinding`, both in Avalonia and in WPF. `MultiBinding` assumes multiple binding sources and still the same single binding target. The multiple sources are combined into a single target by a special converter that implements `IMultiValueConverter`.
+
+One of the complex parts of the binding is that there are several ways to specify the source object both in Avalonia and in WPF but Avalonia has more ways to do it. Here is the description of various methods of specifying the source object:
+
+1. If you do not specify the source object at all - in that case, the default source object will be given by `DataContext` property of the `Binding`'s target object. `DataContext` automatically propagates down the visual tree unless explicitly changed \(with some exceptions\).
+2. You can specify the source explicitly in XAML by assigning it to the binding's `Source` property. You can assign it directly in C\#, or in XAML one can use `StaticResource` and `x:Static` markup extensions.
+3. There is `ElementName` property that can be used to find the source element within the same XAML file by name.
+4. There is `RelativeSource` property that opens up several more interesting ways of locating the source object depending on its `Mode` property:
+   1. For `Mode==Self`, the source object will be the same as the target object.
+   2. `Mode==TemplatedParent` can only be used within a `ControlTemplate` of some Avalonia `TemplatedControl` - the explanation of what it means will be given in a future guide explaining the control templates. `TemplatedParent` within the control template means that the source of the binding is the control for which the template is used.
+   3. `Mode==FindAncestor` means that the source object will be searched for up the Visual Tree. `AncestorType` property should also be used in this mode, to specify the type of the source object to search. If nothing else is specified, the first object of that type will become the source object. If also `AncestorLevel` is set to some positive integer `N`, it specifies that the `N`th ancestor object of that type will be returned \(by default `AncestorLevel == 1`\) as the source for the binding. In Avalonia \(but not in WPF\), the `RelativeSource`'s `Tree` property can be \(amazingly\) set to `TreeType.Logical` \(it is `TreeType.Visual` by default\). In that case, the ancestors are being searched up the Logical tree \(which is sparser and less complex\).
+
+Now enough theory, let us do some practical examples.
+
+### **Demonstrating Different Binding Sources in XAML**
+
+This sample is located within [NP.Demos.BindingSourcesSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.BindingSourcesSample) solution. This sample shows various possible ways to set the source of the bindings in XAML.
+
+Here is what you see once you run the sample:
+
+![](https://www.codeproject.com/KB/Articles/5311995/BindingSourcesSample.png)
+
+Now let us go one by one over the various samples \(all of which are located in _MainWindow.axaml_ file\) and explain the XAML code that produced it.
+
+#### **DataContext \(default\) Binding Source**
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        ...
+        DataContext="This is the Window's DataContext"
+        ...>
+        ...
+        <Grid ...>
+            <TextBlock Text="{Binding}"/>
+        </Grid>
+        ...
+</Window>
+```
+
+When no source is specified in the binding, the `Binding`'s source reverts to the element's `DataContext` property. In our sample, the `DataContext` is set on the Window, but since it propagates down the visual tree \(unless explicitly changed\) - our `TextBlock` has the same `DataContext` - which is simply a `string` that is displayed by our `TextBlock`.
+
+#### **Setting the Binding.Source Property**
+
+In our second example, we employ the `StaticResource` markup extension to set the source of the binding to the string "This is the Window's resource" defined as the resource of the `Window`:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        ...>
+  <Window.Resources>
+    <x:String x:Key="TheResource">This is the Window's resource</x:String>
+  </Window.Resources>
+  ...
+        <TextBlock Text="{Binding Source={StaticResource TheResource}}"
+                   .../>
+  ...
+</Window>  
+```
+
+#### **Binding by ElementName**
+
+Our window has XAML name - "`TheWindow`" and we use it to bind to its `Tag`: \(`Tag` is a property defined on every Avalonia Control that can contain any object in it\)
+
+```markup
+<Window ...
+        Tag="This is the Window's Tag"
+        x:Name="TheWindow"
+        ...>
+        ...
+             <TextBlock Text="{Binding Path=#TheWindow.Tag}"
+                        .../>
+        ...      
+</Window>   
+```
+
+The above is an Avalonia shorthand for `Text={Binding Path=Tag, ElementName=TheWindow}`.
+
+Note that in many cases "Path=" can be skipped, so that the above binding can be rewritten as 
+
+```markup
+<TextBlock Text="{Binding #TheWindow.Tag}"
+                        .../>
+```
+
+#### **Binding to Self using RelativeSource**
+
+This sample show how element can have itself as `Binding`'s source object using `RelativeSource` in Self mode.
+
+```markup
+<TextBlock Text="{Binding Path=Tag, RelativeSource={RelativeSource Self}}"
+           Tag="This is my own (TextBox'es) Tag"
+         .../>  
+```
+
+#### **Binding to the TemplatedParent**
+
+`RelativeSource` with `TemplatedParent` mode should only be used inside a `ControlTemplate` and using it means that the binding refers to a property \(or a path\) defined on the control that is implemented by the current template:
+
+```markup
+<TemplatedControl Tag="This is Control's Tag"
+                  ...>
+    <TemplatedControl.Template>
+        <ControlTemplate>
+            <TextBlock Text="{Binding Path=Tag, 
+                                      RelativeSource={RelativeSource TemplatedParent}}"/>
+        </ControlTemplate>
+    </TemplatedControl.Template>
+</TemplatedControl>  
+```
+
+The code above means that we are binding to the `Tag` property on the `TemplatedControl` that is implemented by the `ControlTemplate`.
+
+#### **Binding to a Visual Tree Ancestor using RelativeSource with AncestorType**
+
+Specifying the `AncestorType` will signify to the `Binding` that the `RelativeSource` is in `FindAncestor` mode.
+
+```markup
+<Grid ...
+    Tag="This is the first Grid ancestor tag"
+    ...>
+    <StackPanel>
+        <TextBlock Text="{Binding Path=Tag, 
+                                  RelativeSource={RelativeSource AncestorType=Grid}}"/>
+    </StackPanel>
+</Grid>
+```
+
+#### **Binding to a Visual Tree Ancestor using RelativeSource with AncestorType and AncestorLevel**
+
+Using `AncestorLevel`, you can specify that you need not the first ancestor of the needed type but the Nth - where N can be any positive integer.
+
+In the code below, we are searching for the second `Grid` among the element's ancestors:
+
+```markup
+<Grid ...
+      Tag="This is the second Grid ancestor tag">
+    <StackPanel>
+        <Grid Tag="This is the first Grid ancestor tag">
+            <StackPanel>
+                <TextBlock Text="{Binding Path=Tag, 
+                 RelativeSource={RelativeSource AncestorType=Grid, AncestorLevel=2}}"/>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Grid>
+```
+
+#### **Using Avalonia Binding Path Shorthand to find the Parent in the Logical Tree**
+
+```markup
+<Grid Tag="This is the first Grid ancestor tag">
+  <StackPanel Tag="This is the immediate ancestor tag">
+      <TextBlock Text="{Binding $parent.Tag}"/>
+  </StackPanel>
+</Grid>  
+```
+
+Note that `$parent.Tag` means find the parent \(first ancestor\) of the element and get the `Tag` property from it. This binding should be equivalent to a longer version:
+
+```markup
+<TextBlock Text="{Binding Path=Tag,
+                          RelativeSource={RelativeSource Mode=FindAncestor, Tree=Logical}}">
+```
+
+#### **Using Avalonia Binding Path Shorthand to find the first Parent of type Grid in the Logical Tree**
+
+```markup
+<Grid Tag="This is the first Grid ancestor tag">
+  <StackPanel Tag="this is the immediate ancestor tag">
+    <Button Tag="This is the first logical tree ancestor tag">
+      <TextBlock Text="{Binding $parent[Grid].Tag}"/>
+    </Button>
+  </StackPanel>
+</Grid>  
+```
+
+`$parent[Grid].Tag` does the trick.
+
+#### **Binding to the Second Ancestor Grid in the Logical Tree Using Avalonia Binding Path Shorthand**
+
+```markup
+<Grid Tag="This is the second Grid ancestor tag">
+  <StackPanel>
+    <Grid Tag="This is the first Grid ancestor tag">
+      <StackPanel Tag="this is the immediate ancestor tag">
+        <Button Tag="This is the first logical tree ancestor tag">
+          <TextBlock Text="{Binding $parent[Grid;1].Tag}"/>
+        </Button>
+      </StackPanel>
+    </Grid>
+  </StackPanel>
+</Grid>  
+```
+
+`$parent[Grid;1]` refers to the second ancestor of type `Grid`. There is an inconsistency here - the numeration of ancestors starts with 1 in the Visual Tree, but with 0 in the Logical Tree.
+
+### **Demonstrating Different Binding Modes**
+
+This sample is located under [NP.Demos.BindingModesSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.BindingModesSample) solution. All the code for this sample is located within MainWindow.axaml file.
+
+Run the sample and here is what you'll see:
+
+![](https://www.codeproject.com/KB/Articles/5311995/BindingModes.png)
+
+The top three `TextBoxes` are bound to the same `Tag` property of the `Window` - the first using `TwoWay` mode, the second - `OneWay` and the third - `OneTime`. Try typing in the top `TextBox`. Then, the second from the top `TextBox` will get updated, but not the third:
+
+![](https://www.codeproject.com/KB/Articles/5311995/BindingModesAfterTypingInTheTopBox.png)
+
+This is understandable, since the top `TextBox` has a `TwoWay` binding with the `Window's` tag - when you modify its text, the `Window`'s tag also gets updated and the one way binding to the same tag will update the second `TextBox`.
+
+Nothing will happen if you try to modify text in the second `TextBox` since it has a `OneWay` - from `Window`'s `Tag` to `TextBox.Text` binding. And of course, nothing will happen when someone modifies the text in the 3rd `TextBox`.
+
+Here is the relevant code for the top three text boxes \(the 4th one is special and I'll explain - why - in a moment\):
+
+```markup
+<Window Tag="Hello World!"
+        ...>
+    ...
+    <TextBox ...
+             Text="{Binding $parent[Window].Tag, Mode=TwoWay}"/>
+    <TextBox ...
+             Text="{Binding $parent[Window].Tag, Mode=OneWay}"/>
+    <TextBox ...
+             Text="{Binding $parent[Window].Tag, Mode=OneTime}"/>
+    ...
+</Window>
+```
+
+The forth `TextBox` demonstrates the `OneWayToSource` mode. Note that initially, it does not display anything. If you start typing it in, you'll see that the same text appears below:
+
+![Image 19](https://www.codeproject.com/KB/Articles/5311995/OneWayToSourceBinding.png)
+
+Here is the relevant code for the fourth `TextBox`:XAMLCopy Code
+
+```text
+<Grid ...
+      Tag="This is a OneWayToSource Grid Tag">
+  ...
+  <TextBox Text="{Binding $parent[Grid].Tag, Mode=OneWayToSource}"
+           .../>
+  <TextBlock Text="{Binding $parent[Grid].Tag, Mode=OneWay}"
+             .../>
+</Grid>  
+```
+
+The `TextBox` and the `TextBlock` are both bound to the `Tag` on the `Grid panel`.
+
+Note that the `Tag` originally has some text in it: "This is a `OneWayToSource` Grid Tag". Yet, both the `TextBox` and the `TextBlock` were empty in the beginning. This is because `OneWayToSource` binding removed the initial value of the tag \(the `TextBox` initially did not have any text in it, so it overrode the initial value of the `Tag` because of the binding\).
+
+This is the reason I did not use the Window's `Tag` for the fourth `TextBox` - it would have ruined the initial values for three other `TextBoxes`.
+
+This is also the reason why I rarely if ever use `OneWayToSource` binding - it would have been much more useful if it were assigning the initial value from `Source` to `Target` and only then would be working from `Target` to `Source`.
+
+### **Binding Converters**
+
+Open [NP.Demos.BindingConvertersSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.BindingConvertersSample) solution. Here is what you'll see once you run it:
+
+![](https://www.codeproject.com/KB/Articles/5311995/ConvertersSample.png)
+
+Try removing the text from the top `TextBox`. The green text will disappear and the red text will appear instead:
+
+![](https://www.codeproject.com/KB/Articles/5311995/ConvertersTextEmptySample.png)
+
+Also whatever you type in the top or bottom `TextBox`, the same character but inverted from right to left will appear in the other `TextBox`.
+
+Here is the relevant code:
+
+```markup
+<Grid ...>
+    ...
+  <TextBox  x:Name="TheTextBox" 
+            Text="Hello World!"
+            .../>
+  <TextBlock Text="This text shows when the text in the TextBox is empty"
+             IsVisible="{Binding #TheTextBox.Text, 
+             Converter={x:Static StringConverters.IsNullOrEmpty}}"
+             Foreground="Red"
+             .../>
+  <TextBlock Text="This text shows when the text in the TextBox is NOT empty"
+             IsVisible="{Binding #TheTextBox.Text, 
+             Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+             Foreground="Green"
+             .../>
+  <TextBox  Grid.Row="4"
+            Text="{Binding #TheTextBox.Text, Mode=TwoWay, 
+            Converter={StaticResource TheReverseConverter}}"
+            ...>
+</Grid>
+```
+
+For the two `TextBlock`s, I am using the Avalonia built-in converters - `IsNullOrEmpty` and `IsNotNullOrEmpty`. They are defined as `static` properties within `StringConverters` class which is part of the default Avalonia namespace. This is why, no namespace prefix is necessary and this is why I am using `x:Static` markup extension to find them, e.g., `Converter={x:Static StringConverters.IsNullOrEmpty}`.
+
+The `TextBox` at the bottom is using `ReverseStringConverter` defined in the same project:
+
+```csharp
+public class ReverseStringConverter : IValueConverter
+{
+    private static string? ReverseStr(object value)
+    {
+        if (value is string str)
+        {
+            return new string(str.Reverse().ToArray());
+        }
+
+        return null;
+    }
+
+    public object? Convert
+    (object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return ReverseStr(value);
+    }
+
+    public object? ConvertBack
+    (object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        return ReverseStr(value);
+    }
+}  
+```
+
+Note that the converter implements `IValueConverter` interface. It defines both forward and backward conversion by `Convert(...)` and `ConvertBack(...)` methods correspondingly. The bottom `TextBox`es binding is, of course' `TwoWay` so that whichever `TextBox` changes, the other will change also.
+
+### **MultiValue Binding Sample**
+
+The next sample shows how to connect a target of a binding to multiple sources. The code is located under [NP.Demos.MultiBindingSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.MultiBindingSample) solution.
+
+Run the sample, here is what you'll see:
+
+![](https://www.codeproject.com/KB/Articles/5311995/MultiBindingSample.png)
+
+Try typing `smth` in either of the `TextBox`es. Their concatenation will keep showing at the bottom.
+
+Here is the relevant code that does it:
+
+```markup
+<Grid RowDefinitions="Auto,Auto,Auto"
+      <TextBox x:Name="Str1"
+               Text="Hi"
+               .../>
+      <TextBox x:Name="Str2" 
+               Text="Hello"
+               .../>
+      <TextBlock ...>
+          <TextBlock.Text>
+              <MultiBinding Converter="{x:Static local:ConcatenationConverter.Instance}">
+                  <Binding Path="#Str1.Text"/>
+                  <Binding Path="#Str2.Text"/>
+              </MultiBinding>
+          </TextBlock.Text>
+      </TextBlock>
+</Grid>  
+```
+
+The `MultiBinding` contains two single value bindings to the individual text boxes:
+
+```markup
+<Binding Path="#Str1.Text"/>
+<Binding Path="#Str2.Text"/>
+```
+
+Their values are converted by the `MultiValue` converter \(`Converter="{x:Static local:ConcatenationConverter.Instance}"`\) into their concatenation.
+
+The `MultiValue` converter is defined in `ConcatenationConverter` class within the sample project:
+
+```csharp
+public class ConcatenationConverter : IMultiValueConverter
+{
+    // static instance to reference
+    public static ConcatenationConverter Instance { get; } =
+        new ConcatenationConverter();
+
+    public object? Convert(IList<object> values, 
+           Type targetType, object parameter, CultureInfo culture)
+    {
+        if (values == null || values.Count == 0)
+        {
+            return null;
+        }
+
+        return 
+            string.Join("", values.Select(v => v?.ToString()).Where(v => v != null));
+    }
+}  
+```
+
+The class implements `IMultiValueConverter` interface \(and not `IValueConverter` used for the single value binding conversion\).
+
+`IMultiValueConverter` has only one method - `Convert(...)` for forward conversion and the first argument to it is the `IList<object>` that has an entry for each source value.
+
+To avoid polluting XAML code by creating a XAML resource, I created a `static` property called `Instance` that refers to a global instance of the same class and is easily accessible from XAML with `x:Static` markup extension: `Converter="{x:Static local:ConcatenationConverter.Instance}"`.
+
+### **Creating a Binding in C\# Code**
+
+The next sample is located under [NP.Demos.BindingInCode](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.BindingInCodeSample) solution. Here is what you'll see once you run it:
+
+![](https://www.codeproject.com/KB/Articles/5311995/BindingInCodeSample.png)
+
+Try changing the text in the `TextBox` - nothing else should happen until you press button "**Bind**". Once you press it, the text appears below the `TextBox` mimicking the text within it:
+
+![](https://www.codeproject.com/KB/Articles/5311995/BindingInCodeSampleAfterBind.png)
+
+When you press Button "**Unbind**", the text below will stop reacting to the modifications again.
+
+This functionality is achieved mostly by the code in MainWindow.axaml.cs. The XAML code simply defines and positions the `TextBox` and the `TextBlock` under it as well as the two buttons: `BindButton` and `UnbindButton`:
+
+```markup
+...
+<StackPanel ...>
+    <TextBox x:Name="TheTextBox"
+             Text="Hello World"/>
+    <TextBlock x:Name="TheTextBlock"
+               HorizontalAlignment="Left"/>
+</StackPanel>
+...
+<StackPanel ...>
+    <Button x:Name="BindButton" 
+            Content="Bind"/>
+
+    <Button x:Name="UnbindButton"
+            Content="Unbind"/>
+</StackPanel>
+...  
+```
+
+And here is the relevant C\# code:
+
+```csharp
+public partial class MainWindow : Window
+{
+    TextBox _textBox;
+    TextBlock _textBlock;
+    public MainWindow()
+    {
+        InitializeComponent();
+        ...
+        _textBox = this.FindControl<TextBox>("TheTextBox");
+        _textBlock = this.FindControl<TextBlock>("TheTextBlock");
+
+        Button bindButton = this.FindControl<Button>("BindButton");
+        bindButton.Click += BindButton_Click;
+
+        Button unbindButton = this.FindControl<Button>("UnbindButton");
+        unbindButton.Click += UnbindButton_Click;
+    }
+
+    IDisposable? _bindingSubscription;
+    private void BindButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_bindingSubscription == null)
+        {
+            _bindingSubscription =
+                _textBlock.Bind(TextBlock.TextProperty, 
+                                new Binding { Source = _textBox, Path = "Text" });
+
+            // The following line will also do the trick, but you won't be able to unbind.
+            //_textBlock[!TextBlock.TextProperty] = _textBox[!TextBox.TextProperty];
+        }
+    }
+
+    private void UnbindButton_Click(object? sender, RoutedEventArgs e)
+    {
+        _bindingSubscription?.Dispose();
+        _bindingSubscription = null;
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+}
+```
+
+The binding is achieved by calling method `Bind` on the `TextBlock`:
+
+```csharp
+_bindingSubscription =
+  _textBlock.Bind(TextBlock.TextProperty, new Binding { Source = _textBox, Path = "Text" });
+```
+
+It returns a disposable object stored in `_bindingSubscription` field.
+
+In order to destroy the binding - this object must be disposed of: `_bindingSubscription.Dispose()`.
+
+Amazingly enough \(at least for the very truly yours\), the following C\# code will also establish the same binding:
+
+```csharp
+_textBlock[!TextBlock.TextProperty] = _textBox[!TextBox.TextProperty];  
+```
+
+Only such binding will not be destructible \(or at least not as easily destructible as the one returned by the `Bind(...)` method\).
+
+After a bit of research, I understood how this is working: bang \(!\) operator turns an `AvaloniaProperty` object into an object of type `IndexerDescriptor`. This object can be passed to `AvaloniaObject's` operator `[]` to return an object of type `IBinding`. Then assignment to an `IndexerDescriptor` cell on another `AvaloniaObject` will call the `Bind(...)` method and create the binding.
+
+### **Binding to Properties of Non-Visual Classes**
+
+Previously, we showed different ways to bind two \(source and target\) properties on visual objects. Yet, the source of the binding does not have to be defined on a visual object. In fact, as we mentioned before under the very important and popular MVVM pattern, the complex Visual Objects are being made to mimic behaviors of simple non-visual objects - the so called `ViewModel`s.
+
+In this section, we will show how to create bindable properties in the non-visual classes and bind our visuals to them.
+
+The project is located in [NP.Demos.BindingToNonVisualSample.](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.BindingToNonVisualSample) Here is what you see when you run it:
+
+![](https://www.codeproject.com/KB/Articles/5311995/BindingToNonVisualSample1.png)
+
+There is a list of names in the middle. The number of names is displayed on the bottom left and the button to remove last name is on the bottom right.
+
+Click the button to remove the last item on the list. You'll see that the list and the number of items will get updated. When you remove all the items from the list, the "**Number of Items**" will become '`0`' and button will get disabled:
+
+![Image 26](https://www.codeproject.com/KB/Articles/5311995/BindingToNonVisualSample2.png)
+
+The custom code for this sample is located in three files: ViewModel.cs, MainWindow.axaml and MainWindow.axaml.cs. `ViewModel` is a very simple purely non-visual class. Here is its code:
+
+```csharp
+public class ViewModel : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged(string propName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+    }
+
+    // collection of names
+    public ObservableCollection<string> Names { get; } = new ObservableCollection<string>();
+
+    // number of names
+    public int NamesCount => Names.Count;
+
+    // true if there are some names in the collection,
+    // false otherwise
+    public bool HasItems => NamesCount > 0;
+
+    public ViewModel()
+    {
+        Names.CollectionChanged += Names_CollectionChanged;
+    }
+
+    // fire then notifications every time Names collection changes.
+    private void Names_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        // Change Notification for Avalonia for properties
+        // NamesCount and HasItems
+        OnPropertyChanged(nameof(NamesCount));
+        OnPropertyChanged(nameof(HasItems));
+    }
+}  
+```
+
+Note that the collection `Names` is of type `ObservableCollection<string>`. This ensures that the visual collection bound to the `Names` collection will be able to update itself when items are added or removed from the non-visual `Names` collection.
+
+Note also that every time the `Names` collection changes, we are firing `PropertyChanged` events passing to them `nameof(NamesCount)` and `nameof(HasItems)` as arguments. This will notify the bindings to those properties that they have to update their targets.
+
+Now take a look at MainWindow.axaml:
+
+```markup
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NP.Demos.BindingToNonVisualSample"
+        ...>
+  <!-- Define the DataContext of the Window-->
+  <Window.DataContext>
+    <local:ViewModel>
+      <local:ViewModel.Names>
+        <x:String>Tom</x:String>
+        <x:String>Jack</x:String>
+        <x:String>Harry</x:String>
+      </local:ViewModel.Names>
+    </local:ViewModel>
+  </Window.DataContext>
+  <Grid ...>
+
+    <!-- Binding the Items of ItemsControl to the Names collection -->
+    <ItemsControl Items="{Binding Path=Names}"
+                  .../>
+
+    <Grid Grid.Row="1">
+
+      <!-- Binding Text to NamesCount -->
+      <TextBlock Text="{Binding Path=NamesCount, StringFormat='Number of Items: {0}'}"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Center"/>
+
+      <!-- Binding Button.IsEnabled to HasItems -->
+      <Button x:Name="RemoveLastItemButton"
+              Content="Remove Last Item"
+              IsEnabled="{Binding Path=HasItems}"
+              .../>
+    </Grid>
+  </Grid>
+</Window>
+```
+
+The Window `DataContext` is set directly to contain an object of `ViewModel` type with its `Names` collection populated to `Top`, `Jack` and `Harry`. Since `DataContext` propagates down the Visual Tree, the rest of the elements within the MainWindow.axaml file will have the same `DataContext`.
+
+`ItemControl's` `Items` property is bound to the `Names` collection of the `ViewModel` object: `<ItemsControl Items="{Binding Path=Names}"`. Note that in WPF, the `ItemsControl` would be using `ItemsSource` property instead.
+
+The `TextBlock's` `Text` property is bound to the `NamesCount` property of the `ViewModel`: `<TextBlock Text="{Binding Path=NamesCount, StringFormat='Number of Items: {0}'}"`. Note the use of `StringFormat` within the binding - it allows to add some `string` around the bound value.
+
+Finally, the `Button's` `IsEnabled` property is bound to `HasItems` property on the `ViewModel`, so that the number of items becomes '`0`', the button becomes disabled.
+
+Finally, MainWindow.xaml.cs file simply contains sets the event handler to remove the last item from the `Names` collection on each button click:
+
+```csharp
+public MainWindow()
+{
+    InitializeComponent();
+
+    ...
+
+    Button removeLastItemButton =
+        this.FindControl<Button>("RemoveLastItemButton");
+
+    removeLastItemButton.Click += RemoveLastItemButton_Click;
+}
+
+private void RemoveLastItemButton_Click(object? sender, RoutedEventArgs e)
+{
+    ViewModel viewModel = (ViewModel)this.DataContext!;
+
+    viewModel.Names.RemoveAt(viewModel.Names.Count - 1);
+```
 
 ## Routed Events
 
