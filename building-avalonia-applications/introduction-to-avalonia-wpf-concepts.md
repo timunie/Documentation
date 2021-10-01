@@ -2110,11 +2110,11 @@ There are 3 different modes of propagation for the routed events:
 
 The following pictures depict bubbling and tunneling event propagation:
 
-![](../.gitbook/assets/image%20%2842%29.png)
+![](../.gitbook/assets/image%20%2845%29.png)
 
 
 
-![](../.gitbook/assets/image%20%2840%29.png)
+![](../.gitbook/assets/image%20%2841%29.png)
 
 The Avalonia routed events are more powerful and logical than their WPF counterparts because in WPF the event has to choose only one of the routing strategies - it can either be direct or bubbling or tunneling. In order to allow some preprocessing before handing the main \(usually bubbling\) events many bubbling events have their tunneling peers firing before them - the so called Preview events. The preview events are completely different events in WPF and there is no logical connection \(aside from their names\) between them and the corresponding bubbling events. 
 
@@ -2153,7 +2153,7 @@ We have a `Window` \(with Red background\) containing a `Grid` with Green backgr
 
 Run the project in the Visual Studio debugger - here is what you shall see:
 
-![](../.gitbook/assets/image%20%2841%29.png)
+![](../.gitbook/assets/image%20%2843%29.png)
 
 Click on the blue square in the middle and take a look a the "Output" pane of the Visual Studio. Here is what you see there:
 
@@ -2319,6 +2319,20 @@ Bubbling Routed Event PointerPressed raised on TheWindow; Event Source is TheBor
 ```
 
 The last line show that the bubbling pass of the event was handled on the window, even though the event had been handled before.
+
+Now start the Avalonia Development Tool by mouse-clicking on the window of the sample and pressing **F12**. Click on the "Events" tab and out of all events displayed on the left pane, choose PointerPressed to be checked and undo the check on the rest of them:
+
+![](../.gitbook/assets/image%20%2844%29.png)
+
+After that press on the blue border within the application, an entry for the event will show the main window:
+
+![](../.gitbook/assets/image%20%2842%29.png)
+
+Now mouse-click on the event entry in the main window - the Event Chain pane will show how the event was propagating on the visual tree:
+
+![](../.gitbook/assets/image%20%2840%29.png)
+
+Unfortunately currently, the Event Chain of the tool shows only the propagation of the unhandled event.  It stops showing at the last point when the event was unhandled - in our case the first item of the bubble pass. You can see that there are more instances of the tunneling of our event shown in the tool than in our previous printing. This is because the tool shows all elements within the Visual tree that the event is being raised on, while we only connected the handler to the Window, the Grid and the Border.
 
 ### Custom Routed Event Sample
 
