@@ -2093,7 +2093,40 @@ private void RemoveLastItemButton_Click(object? sender, RoutedEventArgs e)
 
 ## Routed Events
 
-also mention detecting routed events in Development Tool
+### Routed Event Concepts
+
+Same as WPF, Avalonia has a concept of Attached Routed Events that propagate up and down the Visual Tree. They are more powerful and easier to deal with than WPF Routed Events \(as will be explained below\).
+
+Unlike the usual C\# events they
+
+1. Can be defined outside of the class that fires them and 'Attached' to the objects.
+2. Can propagate up and down the WPF visual tree - in the sense that the event can be fired by one tree node and handled on another tree node \(one of the firing node's ancestors\).
+
+There are 3 different modes of propagation for the routed events:
+
+1. Direct - this means that the event can only be handled on the same visual tree node that fires it.
+2. Bubbling - the event travels from the current node \(the node that raises the event\) to the root of the visual tree and can be handled anywhere on the way. For example, if the visual tree consists of the Window containing a Grid containing a Button and a bubbling event is fired on the Button, then this event will travel from the Button to the Grid and then to the Window.
+3. Tunneling - the event travels from the root node of the visual tree to the current node \(the node that raises the event\). Using the same example as above, the Tunneling event will first be raised on the Window, then on the Grid and finally on the button.
+
+The following pictures depict bubbling and tunneling event propagation:
+
+![](https://www.codeproject.com/KB/cs/1017398/Bubble.png)
+
+
+
+![](https://www.codeproject.com/KB/cs/1017398/Tunnel.png)
+
+The Avalonia routed events are more powerful and logical than their WPF counterparts because in WPF the event has to choose only one of the routing strategies - it can either be direct or bubbling or tunneling. In order to allow some preprocessing before handing the main \(usually bubbling\) events many bubbling events have their tunneling peers firing before them - the so called Preview events. The preview events are completely different events in WPF and there is no logical connection \(aside from their names\) between them and the corresponding bubbling events. 
+
+In Avalonia, the same event can be registered to have multiple routing strategies - the so called Preview events are no longer necessary - since the same event can be first raised as a tunneling event \(used for preview\) and then as the bubbling event - doing the real stuff. 
+
+Do not worry if you are not a WPF expert and a bit confused about this discussion - we are going to provide simple examples to illustrate what was stated above.
+
+### Built-In Routed Event Example
+
+There are many Routed Events that already exist in Avalonia \(as there are many built-in events in WPF\). 
+
+
 
 ## Commands, Calling C\# Methods from XAML
 
