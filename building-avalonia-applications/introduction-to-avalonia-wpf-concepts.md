@@ -2110,7 +2110,7 @@ There are 3 different modes of propagation for the routed events:
 
 The following pictures depict bubbling and tunneling event propagation:
 
-![](../.gitbook/assets/image%20%2845%29.png)
+![](../.gitbook/assets/image%20%2846%29.png)
 
 
 
@@ -2336,7 +2336,275 @@ Unfortunately currently, the Event Chain of the tool shows only the propagation 
 
 ### Custom Routed Event Sample
 
-## Commands, Calling C\# Methods from XAML
+This sample is located within [NP.Demos.CustomRoutedEventSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.CustomRoutedEventSample) solution. It is very similar to the previous sample, only here we fire the custom routed event `MyCustomRoutedEvent` defined within StaticRoutedEvents.cs file:
+
+```csharp
+using Avalonia.Interactivity;
+
+namespace NP.Demos.CustomRoutedEventSample
+{
+    public static class StaticRoutedEvents
+    {
+        /// <summary>
+        /// create the MyCustomRoutedEvent
+        /// </summary>
+        public static readonly RoutedEvent<RoutedEventArgs> MyCustomRoutedEvent =
+            RoutedEvent.Register<object, RoutedEventArgs>
+            (
+                "MyCustomRouted", 
+                RoutingStrategies.Tunnel //| RoutingStrategies.Bubble
+            );
+    }
+}
+```
+
+As you see, defining the event is very simple - just calling `RoutedEvent.Register(...)` method passing the name of the event and the routing strategy.
+
+MainWindow.axaml file is exactly the same as in the previous section. MainWindow.axaml.cs code is also very similar to one of the previous section, only here we handle `MyCustomRoutedEvent`, eg:
+
+```csharp
+// add event handler for the Window
+this.AddHandler
+(
+    StaticRoutedEvents.MyCustomRoutedEvent, //routed event
+    HandleCustomEvent, // event handler
+    RoutingStrategies.Bubble | RoutingStrategies.Tunnel // routing strategy filter
+);
+```
+
+We also add some code to raise the `MyCustomRoutedEvent` when mouse is pressed on the blue border:
+
+```csharp
+  // we add the handler to pointer pressed event in order
+  // to raise MyCustomRoutedEvent from it.
+  border.PointerPressed += Border_PointerPressed;
+}
+
+/// PointerPressed handler that raises MyCustomRoutedEvent
+private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
+{
+    Control control = (Control)sender!;
+
+    // Raising MyCustomRoutedEvent
+    control.RaiseEvent(new RoutedEventArgs(StaticRoutedEvents.MyCustomRoutedEvent));
+}
+
+```
+
+The code line for raising the event specifically is:
+
+```csharp
+// Raising MyCustomRoutedEvent
+control.RaiseEvent(new RoutedEventArgs(StaticRoutedEvents.MyCustomRoutedEvent));
+```
+
+Here is the \(almost\) full code-behind from MainWindow.axaml.cs file:
+
+```csharp
+public partial class MainWindow : Window
+{
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        ...
+        
+        // add event handler for the Window
+        this.AddHandler
+        (
+            StaticRoutedEvents.MyCustomRoutedEvent, //routed event
+            HandleClickEvent, // event handler
+            RoutingStrategies.Bubble | RoutingStrategies.Tunnel // routing strategy filter
+        );
+
+        Grid rootPanel = this.FindControl<Grid>("TheRootPanel");
+
+        // add event handler for the Grid
+        rootPanel.AddHandler
+        (
+            StaticRoutedEvents.MyCustomRoutedEvent, 
+            HandleCustomEvent,
+            RoutingStrategies.Bubble | RoutingStrategies.Tunnel);
+
+        Border border = this.FindControl<Border>("TheBorder");
+
+        // add event handler for the Blue Border in the middle
+        border.AddHandler(
+            StaticRoutedEvents.MyCustomRoutedEvent,
+            HandleCustomEvent,
+            RoutingStrategies.Bubble | RoutingStrategies.Tunnel
+            );
+
+        // we add the handler to pointer pressed event in order
+        // to raise MyCustomRoutedEvent from it.
+        border.PointerPressed += Border_PointerPressed;
+    }
+
+
+    /// PointerPressed handler that raises MyCustomRoutedEvent
+    private void Border_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        Control control = (Control)sender!;
+
+        // Raising MyCustomRoutedEvent
+        control.RaiseEvent(new RoutedEventArgs(StaticRoutedEvents.MyCustomRoutedEvent));
+    }
+
+    private void HandleCustomEvent(object? sender, RoutedEventArgs e)
+    {
+        Control senderControl = (Control) sender!;
+
+        string eventTypeStr = e.Route switch
+        {
+            RoutingStrategies.Bubble => "Bubbling",
+            RoutingStrategies.Tunnel => "Tunneling",
+            _ => "Direct"
+        };
+
+        Debug.WriteLine($"{eventTypeStr} Routed Event {e.RoutedEvent!.Name} raised on {senderControl.Name}; Event Source is {(e.Source as Control)!.Name}");
+    }
+    ...
+}
+```
+
+When we run the project and click on the blue square in the middle, the following will be printed onto the Visual Studio Output pane:
+
+```csharp
+Tunneling Routed Event MyCustomRouted raised on TheWindow; Event Source is TheBorder
+Tunneling Routed Event MyCustomRouted raised on TheRootPanel; Event Source is TheBorder
+Tunneling Routed Event MyCustomRouted raised on TheBorder; Event Source is TheBorder
+```
+
+Note that only tunneling pass is being handled. This is because we defined the event to be a pure tunneling event by passing its last argument to be `RoutingStrategies.Tunnel`. If we change it to `RoutingStrategies.Tunnel | RoutingStrategies.Bubble`, and restart the solution again, we shall see both tunneling and bubbling passes:
+
+```csharp
+Tunneling Routed Event MyCustomRouted raised on TheWindow; Event Source is TheBorder
+Tunneling Routed Event MyCustomRouted raised on TheRootPanel; Event Source is TheBorder
+Tunneling Routed Event MyCustomRouted raised on TheBorder; Event Source is TheBorder
+Bubbling Routed Event MyCustomRouted raised on TheBorder; Event Source is TheBorder
+Bubbling Routed Event MyCustomRouted raised on TheRootPanel; Event Source is TheBorder
+Bubbling Routed Event MyCustomRouted raised on TheWindow; Event Source is TheBorder
+```
+
+## Avalonia Commands and Calling C\# Methods from XAML
+
+### Command Concepts
+
+When someone builds an application it is customary to place the logic controlling the visuals into some non-visual classes \(called View Models\) and then use bindings and other ways of connecting your visuals in XAML to the View Models. The idea behind it is that the non-visual objects are much simpler and easier to test than the Visuals therefore if you deal primarily with non-visual objects, you'll have easier coding and testing. Such pattern is called MVVM.
+
+`Command` is a way to execute some C\# methods within the View Model when a Button or a MenuItem is clicked.
+
+Avalonia `Button` and `MenuItem` each have a property `Command` which can be bound to a `Command` defined within a view model. Such command can execute a View Model method hooked to it. Avalonia does not have its own command implementation, but it is recommended to use ReactiveUI `ReactiveCommand`. One can also control whether the Button \(or a MenuItem\) is enabled or not via a command object placed within the View Model.
+
+Yet such approach of placing the commands within the View Models has major drawbacks:
+
+* It forces the View Models to depend visual .NET assemblies \(which implement the commands\). This breaks the hard barrier that should be placed between the non-visual View Models and the Visuals. After that it becomes much more difficult to control \(especially on a project with many developers\) that the visual code does not leak into the View Models. 
+* It unnecessarily pollutes the View Models.
+
+Avalonia, therefore provides a considerably cleaner way of calling a method on a View Model - by binding the Command to the method's name.
+
+Command properties, however, exist only on various `Buttons` and `MenuItems` and trigger only on `Click` event. Many times you would want to trigger some View Model actions on other routed events also raised on controls other than `Button` or `MenuItem`. For such cases, there is [NP.Avalonia.Visuals](https://github.com/npolyak/NP.Avalonia.Visuals) package \(also available view nuget\). An example with this package will also be shown.
+
+### Using Avalonia Command for Calling a Method on a View Model
+
+Run this sample located under [NP.Demos.CommandSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.CommandSample) solution. Here is what you'll see:
+
+![](../.gitbook/assets/image%20%2845%29.png)
+
+There is Status field value shown in the middle of the window. When you press "Toggle Status" button it will toggle between `True` and `False`. Clicking "Set Status to True" will set the status value to 'True' and unchecking "Can Toggle Status" checkbox will disable "Toggle Status" button.
+
+Take a look at the file called ViewModel.cs. It contains purely non-visual code. 
+
+```csharp
+public class ViewModel : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    /// <summary>
+    /// fires INotifyPropertyChanged.PropertyChanged event
+    /// </summary>
+    private void OnPropertyChanged(string propName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+    }
+
+
+    #region Status Property
+    private bool _status;
+    /// <summary>
+    /// Status notifiable property
+    /// </summary>
+    public bool Status
+    {
+        get
+        {
+            return this._status;
+        }
+        set
+        {
+            if (this._status == value)
+            {
+                return;
+            }
+
+            this._status = value;
+            this.OnPropertyChanged(nameof(Status));
+        }
+    }
+    #endregion Status Property
+
+    #region CanToggleStatus Property
+    private bool _canToggleStatus = true;
+    /// <summary>
+    /// Controls whether Toggle Status button is enabled or not
+    /// </summary>
+    public bool CanToggleStatus
+    {
+        get
+        {
+            return this._canToggleStatus;
+        }
+        set
+        {
+            if (this._canToggleStatus == value)
+            {
+                return;
+            }
+
+            this._canToggleStatus = value;
+            this.OnPropertyChanged(nameof(CanToggleStatus));
+        }
+    }
+    #endregion CanToggleStatus Property
+
+    /// <summary>
+    /// Toggles the status
+    /// </summary>
+    public void ToggleStatus()
+    {
+        Status = !Status;
+    }
+
+    /// <summary>
+    /// Set the Status to whatever 'status' is passed
+    /// </summary>
+    public void SetStatus(bool status)
+    {
+        Status = status;
+    }
+}
+```
+
+ It provides 
+
+* a boolean property `Status`
+* `ToggleStatus()` method that toggles the `Status` property
+* `SetStatus(bool status)` method that set `Status` property to whatever argument was passed to it
+* `CanToggleStatus` property that controls whether `ToggleStatus()` action is enabled or not.
+
+Whenever any property changes, the `PropertyChanged` event fires, so that the Avalonia bindings will be notified about the property change.
+
+`MainWindow` constructore loca
 
 ## Avalonia User Controls - do not build them - they are the worst
 
