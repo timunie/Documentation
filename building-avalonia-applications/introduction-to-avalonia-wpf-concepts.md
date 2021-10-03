@@ -2949,7 +2949,7 @@ public class MyCustomControl : TemplatedControl
 
     // CanSave is set to true when SavedValue is not the same as NewView
     // false otherwise
-    private void SetCanSave(object? obj)
+    private void SetCanSave(object? _)
     {
         CanSave = SavedValue != NewValue;
     }
@@ -2972,9 +2972,205 @@ public class MyCustomControl : TemplatedControl
 }
 ```
 
-Do not be scared by the number of lines, most of the code is there because of the StyledProperty and DirectProperty definitions and was created by the snippets _avsp_ and _avdr_ described in [Avalonia Special Properties](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/~/drafts/-Ml2kPCyuxUN3i-5Qduf/building-avalonia-applications/introduction-to-avalonia-wpf-concepts#attached-properties) chapter and available at [NP.Avalonia.Visuals/AvaloniaSnippets](https://github.com/npolyak/NP.Avalonia.Visuals/tree/main/AvaloniaSnippets).
+Do not be scared by the number of lines, most of the code is there because of the StyledProperty and DirectProperty definitions and was created by the snippets _avsp_ and _avdr_ described in [Avalonia Special Properties](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/building-avalonia-applications/introduction-to-avalonia-wpf-concepts#avalonia-special-properties) chapter and available at [NP.Avalonia.Visuals/AvaloniaSnippets](https://github.com/npolyak/NP.Avalonia.Visuals/tree/main/AvaloniaSnippets). 
+
+There are two Styled Properties: `NewValue` and `SavedValue` and one Directy Property: `CanSave`. Whenever any of the styled properties change, the direct property is reevaluated to be false if and only if `NewValue == SavedValue`. This is achieved by subscribing to `NewValue` and `SavedValue` changes within the class constructor:
+
+```csharp
+public MyCustomControl()
+{
+    this.GetObservable(NewValueProperty).Subscribe(SetCanSave);
+    this.GetObservable(SavedValueProperty).Subscribe(SetCanSave);
+}
+```
+
+and by setting it within the callback `SetCanSave(...)` method:
+
+```csharp
+// CanSave is set to true when SavedValue is not the same as NewView
+// false otherwise
+private void SetCanSave(object? _)
+{
+    CanSave = SavedValue != NewValue;
+}
+```
+
+The unneeded argument to this method is passed in order for its signature to match the one required by `Subscribe(...)` method.
+
+There are also two public methods to be called by the Buttons' commands: `void Save()` and `void Cancel()`:
+
+```csharp
+
+    public void Save()
+    {
+        SavedValue = NewValue;
+    }
+
+    public void Cancel()
+    {
+        NewValue = SavedValue;
+    }
+```
+
+The difference between this C\# file and the MyUserControl.axaml.cs file \(which we described in the above section\) is that this file is completely unaware of the XAML implementation and does not have any references to XAML elements.
+
+Instead the XAML built as a ControlTemplate within MainWindow.axaml file refers to the properties and methods defined within MyCustomControl.cs file via bindings and commands.
+
+First of all notice, that we derived our `MyCustomControl` class from `TemplatedControl`:
+
+```csharp
+public class MyCustomControl : TemplatedControl
+{
+}
+```
+
+Because of that it has `Template` property of `ControlTemplate` type which we can set to whatever we want. Here is the corresponding XAML code located within MainWindow.axaml file:
+
+```markup
+<Window x:Name="TheWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.CustomControlSample.MainWindow"
+        xmlns:local="clr-namespace:NP.Demos.CustomControlSample"
+        ...>
+  <local:MyCustomControl Margin="20">
+    <local:MyCustomControl.Template>
+      <ControlTemplate TargetType="local:MyCustomControl">
+        <Grid RowDefinitions="Auto, Auto, *, Auto">
+          <StackPanel Orientation="Horizontal"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center">
+            <TextBlock Text="Enter Text: "
+                       VerticalAlignment="Center"/>
+            <TextBox x:Name="TheTextBox"
+                     Text="{Binding Path=NewValue, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                     MinWidth="150"/>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Center"
+                      Grid.Row="1"
+                      Margin="0,10">
+            <TextBlock Text="Saved Text: "
+                       VerticalAlignment="Center"/>
+            <TextBlock x:Name="SavedTextBlock"
+                       Text="{TemplateBinding SavedValue}"/>
+          </StackPanel>
+          <StackPanel Orientation="Horizontal"
+                      HorizontalAlignment="Right"
+                      Grid.Row="3">
+            <Button x:Name="CancelButton"
+                    Content="Cancel"
+                    Margin="5,0"
+                    IsEnabled="{TemplateBinding CanSave}"
+                    Command="{Binding Path=Cancel, RelativeSource={RelativeSource TemplatedParent}}"/>
+            <Button x:Name="SaveButton"
+                    Content="Save"
+                    Margin="5,0"
+                    IsEnabled="{TemplateBinding CanSave}"
+                    Command="{Binding Path=Save, RelativeSource={RelativeSource TemplatedParent}}"/>
+          </StackPanel>
+        </Grid>
+      </ControlTemplate>
+    </local:MyCustomControl.Template>
+  </local:MyCustomControl>
+</Window>
+
+```
+
+We set the `Template` property to the `ControlTemplate` object via the following lines:
+
+```markup
+<local:MyCustomControl Margin="20">
+  <local:MyCustomControl.Template>
+    <ControlTemplate TargetType="local:MyCustomControl">
+    ...
+```
+
+Note that we are populating the `Template` property in line - which is good for prototyping, but bad for the reuse. Usually the Control Template is created as a resource in some resource file and then we use `{StaticResource <ResourceKey>}` markup extension to set the `Template` property. So the lines above would like like:
+
+```markup
+<local:MyCustomControl Margin="20"
+                       Template="{StaticResource MyCustomControlTemplate}">
+```
+
+This way we'd be able to re-use the same template for multiple controls. Alternatively, we can place the Control Templates with Styles and use Styles for our custom controls, but this will be explained later in more detail. 
+
+Note that we specify the `TargetType` of the `ControlTemplate`:
+
+```markup
+<ControlTemplate TargetType="local:MyCustomControl">
+```
+
+This will allow us to connect to the properties defined by `MyCustomControl` class by using `TemplateBinding` or `{RelativeSource TemplatedParent}`.
+
+The `TextBox` is bound to the `NewValue` property of the control in the `TwoWay` mode, so that changes of one will affect the other:
+
+```markup
+<TextBox x:Name="TheTextBox"
+         Text="{Binding Path=NewValue, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+         MinWidth="150"/>
+```
+
+"SavedTextBlock" `TextBlock` is bound to `SavedValue`:
+
+```markup
+<TextBlock x:Name="SavedTextBlock"
+           Text="{TemplateBinding SavedValue}"/>
+```
+
+And the buttons' commands are bound to the corresponding public methods: `Cancel()` and `Save()`, while the buttons' `IsEnabled` property is bound to `CanSave` property of the control:
+
+```markup
+<Button x:Name="CancelButton"
+        Content="Cancel"
+        Margin="5,0"
+        IsEnabled="{TemplateBinding CanSave}"
+        Command="{Binding Path=Cancel, RelativeSource={RelativeSource TemplatedParent}}"/>
+<Button x:Name="SaveButton"
+        Content="Save"
+        Margin="5,0"
+        IsEnabled="{TemplateBinding CanSave}"
+        Command="{Binding Path=Save, RelativeSource={RelativeSource TemplatedParent}}"/>
+```
+
+[NP.Demos.DifferentVisualsForCustomControlSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.DifferentVisualsForCustomControlSample) shows exactly the same custom control displayed in two different ways:
+
+![](../.gitbook/assets/image%20%2858%29.png)
+
+The representation at the top is exactly the same as in the previous sample - while in the bottom I changed the row orders, so that the buttons are at the top, saved text in the middle and TextBox is at the bottom. That would not be possible with the User Control.
+
+Take a look at the code of the sample. Templates for both visual representations are located within Resources.axaml file under Themes project folder. MainWindow.axaml file contains a ResourceInclude for that file and StaticResource references to the two implementations - CustomControlTemplate1 and CustomControlTemplate2:
+
+```markup
+<Window x:Name="TheWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.DifferentVisualsForCustomControlSample.MainWindow"
+        xmlns:local="clr-namespace:NP.Demos.DifferentVisualsForCustomControlSample"
+        ...>
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceInclude Source="avares://NP.Demos.DifferentVisualsForCustomControlSample/Themes/Resources.axaml"/>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Window.Resources>
+  <Grid RowDefinitions="*, *">
+    <local:MyCustomControl Margin="20"
+                           Template="{StaticResource CustomControlTemplate1}"/>
+    <local:MyCustomControl Margin="20"
+                           Grid.Row="1"
+                           Template="{StaticResource CustomControlTemplate2}"/>
+  </Grid>
+</Window>
+```
 
 ## MVVM Pattern, `DataTemplates`, `ItemsPresenter` and `ContentPresenter`
+
+
+
+
 
 ## Styles
 
