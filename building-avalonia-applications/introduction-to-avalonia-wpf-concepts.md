@@ -3138,7 +3138,7 @@ And the buttons' commands are bound to the corresponding public methods: `Cancel
 
 ![](../.gitbook/assets/image%20%2858%29.png)
 
-The representation at the top is exactly the same as in the previous sample - while in the bottom I changed the row orders, so that the buttons are at the top, saved text in the middle and TextBox is at the bottom. That would not be possible with the User Control.
+The representation at the top is the same as in the previous sample - while in the bottom I changed the row orders, so that the buttons are at the top, saved text in the middle and TextBox is at the bottom. That would not be possible with the User Control.
 
 Take a look at the code of the sample. Templates for both visual representations are located within Resources.axaml file under Themes project folder. MainWindow.axaml file contains a ResourceInclude for that file and `StaticResource` references to the two implementations - CustomControlTemplate1 and CustomControlTemplate2:
 
@@ -3166,7 +3166,28 @@ Take a look at the code of the sample. Templates for both visual representations
 </Window>
 ```
 
-## MVVM Pattern, `DataTemplates`, `ItemsPresenter` and `ContentPresenter`
+## DataTemplates and View Models
+
+### Introduction to View / View Models Concepts
+
+MVVM is an abbreviation for Model-View-View Model pattern. 
+
+View is the visuals that determine the look, feel and visual behaviors of the application.
+
+View Model is a completely non-visual class or set of classes that has two major roles:
+
+1. It provides some functionality that the view can mimic or call via bindings, commands or by other means, e.g. behaviors. For example the View Model can have an method `void SaveAction()` and a property `IsSaveActionAllowed`, while the View will have a button  calling `SaveAction()` method whose `IsEnabled` property will be connected to `IsSaveActionAllowed` property on the View Model.
+2. It wraps the model \(e.g. data that comes from the backend\), provides notifications to the view if Model changed and vice versa and can also provide the communication functionality between different View Models and models.
+
+Dealing with Avalonia Tutorial we are not interested in communications between the View Model and the Model - this is an important topic which deserves a guide of its own. Instead we shall concentrate here on the View - View Model \(VVM\) part of the MVVM pattern.
+
+ VVM pattern is best achieved in Avalonia by using `ContentPresenter` \(for a single object\) or `ItemsPresenter` for a collection of objects. 
+
+`ContentPresenter` with the help of a `DataTemplate` converts a non-visual object into a visual object \(a view\).
+
+`ItemsPresenter` with the help of a `DataTemplate` converts a collection on non-visual objects into a collection of visual objects, each containing a `ContentPresenter` that converts the individual View Model item within the collection into a Visual object. The Visual objects are arranged according to the panel provided by `ItemsPresenter.PanelTemplate` property value. 
+
+`DataTemplate` is an Avalonia/WPF concept 
 
 
 
