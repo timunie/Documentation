@@ -3136,7 +3136,7 @@ And the buttons' commands are bound to the corresponding public methods: `Cancel
 
 [NP.Demos.DifferentVisualsForCustomControlSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.DifferentVisualsForCustomControlSample) shows exactly the same custom control displayed in two different ways:
 
-![](../.gitbook/assets/image%20%2858%29.png)
+![](../.gitbook/assets/image%20%2859%29.png)
 
 The representation at the top is the same as in the previous sample - while in the bottom I changed the row orders, so that the buttons are at the top, saved text in the middle and TextBox is at the bottom. That would not be possible with the User Control.
 
@@ -3184,6 +3184,8 @@ Dealing with Avalonia Tutorial we are not interested in communications between t
  VVM pattern is best achieved in Avalonia by using `ContentPresenter` \(for a single object\) or `ItemsPresenter` for a collection of objects. 
 
 `ContentPresenter` with the help of a `DataTemplate` converts a non-visual object into a visual object \(a view\).
+
+![](../.gitbook/assets/image%20%2858%29.png)
 
 `ItemsPresenter` with the help of a `DataTemplate` converts a collection on non-visual objects into a collection of visual objects, each containing a `ContentPresenter` that converts the individual View Model item within the collection into a Visual object. The Visual objects are arranged according to the panel provided by `ItemsPresenter.PanelTemplate` property value. 
 
