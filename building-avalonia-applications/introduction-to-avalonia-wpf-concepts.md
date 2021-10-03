@@ -2972,7 +2972,7 @@ public class MyCustomControl : TemplatedControl
 }
 ```
 
-Do not be scared by the number of lines, most of the code is there because of the StyledProperty and DirectProperty definitions and was created by the snippets _avsp_ and _avdr_ described above and available at [NP.Avalonia.Visuals/AvaloniaSnippets](https://github.com/npolyak/NP.Avalonia.Visuals/tree/main/AvaloniaSnippets).
+Do not be scared by the number of lines, most of the code is there because of the StyledProperty and DirectProperty definitions and was created by the snippets _avsp_ and _avdr_ described in [Avalonia Special Properties](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/~/drafts/-Ml2kPCyuxUN3i-5Qduf/building-avalonia-applications/introduction-to-avalonia-wpf-concepts#attached-properties) chapter and available at [NP.Avalonia.Visuals/AvaloniaSnippets](https://github.com/npolyak/NP.Avalonia.Visuals/tree/main/AvaloniaSnippets).
 
 ## MVVM Pattern, `DataTemplates`, `ItemsPresenter` and `ContentPresenter`
 
