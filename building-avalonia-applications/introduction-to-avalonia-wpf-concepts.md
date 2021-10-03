@@ -261,7 +261,7 @@ instead of using XML attributes. Of course, such notations are much bulkier than
 
 **Note**: Because `Window.Content` is a special property marked by `ContentAttribte`, we did not have to add `<Window.Content>` at all and could have placed `<local:Person .../>` object straight under `<Window...>` tag. There is only one property per class that can be marked with the `ContentAttribute` so in many cases, we are forced to use the `<Class.Property` notations anyway.
 
-### Special Properties
+### XAML Special Properties
 
 There are several special properties marked by prefix "x:", provided of course that we have "x" namespace prefix defined at the top of the file as:
 
