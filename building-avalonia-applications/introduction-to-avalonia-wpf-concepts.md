@@ -3140,7 +3140,7 @@ And the buttons' commands are bound to the corresponding public methods: `Cancel
 
 The representation at the top is exactly the same as in the previous sample - while in the bottom I changed the row orders, so that the buttons are at the top, saved text in the middle and TextBox is at the bottom. That would not be possible with the User Control.
 
-Take a look at the code of the sample. Templates for both visual representations are located within Resources.axaml file under Themes project folder. MainWindow.axaml file contains a ResourceInclude for that file and StaticResource references to the two implementations - CustomControlTemplate1 and CustomControlTemplate2:
+Take a look at the code of the sample. Templates for both visual representations are located within Resources.axaml file under Themes project folder. MainWindow.axaml file contains a ResourceInclude for that file and `StaticResource` references to the two implementations - CustomControlTemplate1 and CustomControlTemplate2:
 
 ```markup
 <Window x:Name="TheWindow"
