@@ -2110,11 +2110,11 @@ There are 3 different modes of propagation for the routed events:
 
 The following pictures depict bubbling and tunneling event propagation:
 
-![](../.gitbook/assets/image%20%2846%29.png)
+![](../.gitbook/assets/image%20%2855%29.png)
 
 
 
-![](../.gitbook/assets/image%20%2841%29.png)
+![](../.gitbook/assets/image%20%2845%29.png)
 
 The Avalonia routed events are more powerful and logical than their WPF counterparts because in WPF the event has to choose only one of the routing strategies - it can either be direct or bubbling or tunneling. In order to allow some preprocessing before handing the main \(usually bubbling\) events many bubbling events have their tunneling peers firing before them - the so called Preview events. The preview events are completely different events in WPF and there is no logical connection \(aside from their names\) between them and the corresponding bubbling events. 
 
@@ -2153,7 +2153,7 @@ We have a `Window` \(with Red background\) containing a `Grid` with Green backgr
 
 Run the project in the Visual Studio debugger - here is what you shall see:
 
-![](../.gitbook/assets/image%20%2843%29.png)
+![](../.gitbook/assets/image%20%2847%29.png)
 
 Click on the blue square in the middle and take a look a the "Output" pane of the Visual Studio. Here is what you see there:
 
@@ -2322,15 +2322,15 @@ The last line show that the bubbling pass of the event was handled on the window
 
 Now start the Avalonia Development Tool by mouse-clicking on the window of the sample and pressing **F12**. Click on the "Events" tab and out of all events displayed on the left pane, choose PointerPressed to be checked and undo the check on the rest of them:
 
-![](../.gitbook/assets/image%20%2844%29.png)
+![](../.gitbook/assets/image%20%2848%29.png)
 
 After that press on the blue border within the application, an entry for the event will show the main window:
 
-![](../.gitbook/assets/image%20%2842%29.png)
+![](../.gitbook/assets/image%20%2846%29.png)
 
 Now mouse-click on the event entry in the main window - the Event Chain pane will show how the event was propagating on the visual tree:
 
-![](../.gitbook/assets/image%20%2840%29.png)
+![](../.gitbook/assets/image%20%2843%29.png)
 
 Unfortunately currently, the Event Chain of the tool shows only the propagation of the unhandled event.  It stops showing at the last point when the event was unhandled - in our case the first item of the bubble pass. You can see that there are more instances of the tunneling of our event shown in the tool than in our previous printing. This is because the tool shows all elements within the Visual tree that the event is being raised on, while we only connected the handler to the Window, the Grid and the Border.
 
@@ -2503,13 +2503,11 @@ Yet such approach of placing the commands within the View Models has major drawb
 
 Avalonia, therefore provides a considerably cleaner way of calling a method on a View Model - by binding the Command to the method's name.
 
-Command properties, however, exist only on various `Buttons` and `MenuItems` and trigger only on `Click` event. Many times you would want to trigger some View Model actions on other routed events also raised on controls other than `Button` or `MenuItem`. For such cases, there is [NP.Avalonia.Visuals](https://github.com/npolyak/NP.Avalonia.Visuals) package \(also available view nuget\). An example with this package will also be shown.
-
-### Using Avalonia Command for Calling a Method on a View Model
+### Using Avalonia Commands for Calling Methods on a View Model
 
 Run this sample located under [NP.Demos.CommandSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.CommandSample) solution. Here is what you'll see:
 
-![](../.gitbook/assets/image%20%2845%29.png)
+![](../.gitbook/assets/image%20%2854%29.png)
 
 There is Status field value shown in the middle of the window. When you press "Toggle Status" button it will toggle between `True` and `False`. Clicking "Set Status to True" will set the status value to 'True' and unchecking "Can Toggle Status" checkbox will disable "Toggle Status" button.
 
@@ -2597,18 +2595,384 @@ public class ViewModel : INotifyPropertyChanged
 
  It provides 
 
-* a boolean property `Status`
+* a Boolean property `Status`
 * `ToggleStatus()` method that toggles the `Status` property
 * `SetStatus(bool status)` method that set `Status` property to whatever argument was passed to it
 * `CanToggleStatus` property that controls whether `ToggleStatus()` action is enabled or not.
 
 Whenever any property changes, the `PropertyChanged` event fires, so that the Avalonia bindings will be notified about the property change.
 
-`MainWindow` constructore loca
+`MainWindow` constructor locаted within MainWindow.axaml.cs file sets the `DataContext` of the Window to be and instance of our `ViewModel` class:
 
-## Avalonia User Controls - do not build them - they are the worst
+```csharp
+public MainWindow()
+{
+    InitializeComponent();
+
+    ...
+    
+    this.DataContext = new ViewModel();
+}
+```
+
+`DataContext` is a special `StyledProperty` that is inherited by the descendants of the visual tree \(unless changed explicitly\), so it will also be the same for the window descendants.
+
+Here is the content of MainWindow.axaml file:
+
+```markup
+<Window x:Name="TheWindow" 
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.CommandSample.MainWindow"
+        Title="NP.Demos.CommandSample"
+        Width="200"
+        Height="300">
+  <Grid x:Name="TheRootPanel" 
+        RowDefinitions="*, *, *, *"
+        Margin="20">
+    <CheckBox IsChecked="{Binding Path=CanToggleStatus, Mode=TwoWay}"
+              Content="Can Toggle Status"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Center"/>
+    
+    <TextBlock Text="{Binding Path=Status, StringFormat='Status={0}'}"
+               Grid.Row="1"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"/>
+    
+    <Button  Content="Toggle Status"
+             Grid.Row="2"
+             HorizontalAlignment="Right"
+             VerticalAlignment="Center"
+             IsEnabled="{Binding Path=CanToggleStatus}"
+             Command="{Binding Path=ToggleStatus}"/>
+
+    <Button  Content="Set Status to True"
+             Grid.Row="3"
+             HorizontalAlignment="Right"
+             VerticalAlignment="Center"
+             Command="{Binding Path=SetStatus}"
+             CommandParameter="True"/>
+  </Grid>
+</Window>
+```
+
+Checkbox at the top has its `IsChecked` property two-way bound to `CanToggleStatus` of the ViewModel:
+
+```markup
+<CheckBox IsChecked="{Binding Path=CanToggleStatus, Mode=TwoWay}"
+              Content="Can Toggle Status" 
+              .../>
+```
+
+so that when it changes, the corresponding property changes also.
+
+TextBlock displays status \(true or false\):
+
+```markup
+    <TextBlock Text="{Binding Path=Status, StringFormat='Status={0}'}"
+               ... />
+```
+
+Top Button \(via its command calls `ToggleStatus()` method on the ViewModel and its `IsEnabled` property is bound to `CanToggleStatus` property on the ViewModel:
+
+```markup
+    <Button  Content="Toggle Status"
+             ...
+             IsEnabled="{Binding Path=CanToggleStatus}"
+             Command="{Binding Path=ToggleStatus}"/>
+```
+
+The bottom button is there to demonstrate calling a method with an argument on the view model. Its `Command` property is bound to `SetStatus(bool status)` method that has one Boolean argument - `status`. To pass this argument, we set the `CommandParameter` property to "True":
+
+```markup
+    <Button  Content="Set Status to True"
+             Grid.Row="3"
+             HorizontalAlignment="Right"
+             VerticalAlignment="Center"
+             Command="{Binding Path=SetStatus}"
+             CommandParameter="True"/>
+```
+
+## Avalonia User Controls
+
+User controls is something that **almost never should be created or used** since for controls, lookless \(also called custom\) controls are more powerful and have better separation between visual and non-visual concerns and the for Views of the MVVM pattern, `DataTemplates` are better.
+
+Yet, the Avalonia tale will not be complete unless we speak about `UserControls`. They are also the easiest to create and understand. 
+
+The sample's code is located under [NP.Demos.UserControlSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.UserControlSample) solution:
+
+It contains `MyUserControl` user control:
+
+![](../.gitbook/assets/image%20%2844%29.png)
+
+To create such UserControl from scratch - use Add-&gt;New Item context menu and then, in the opened dialog, choose Avalonia on the left and "User Control \(Avalonia\)" on the right and then press Add button. 
+
+![Creating User Control](../.gitbook/assets/image%20%2851%29.png)
+
+Run the sample, here is the window that pops up:
+
+![](../.gitbook/assets/image%20%2850%29.png)
+
+Start typing within the `TextBox`. Buttons "Cancel" and "Save" will become enabled. If you press Cancel, the text will revert to the saved value \(in the beginning it is empty\). If you press Save, the new saved value will become whatever currently is in the `TextBox`. The buttons "Cancel" and "Save" are disabled when the Entered text is the same as the Saved Text and are enabled otherwise:
+
+![](../.gitbook/assets/image%20%2852%29.png)
+
+MainWindow.axaml file has only one non-trivial element: `MyUserControl`:
+
+```markup
+<Window x:Name="TheWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.UserControlSample.MainWindow"
+        xmlns:local="clr-namespace:NP.Demos.UserControlSample"
+        ...>
+  <local:MyUserControl Margin="20"/>
+</Window>
+```
+
+MainWindow.axaml.cs file does not have any non-default code, so all the code for this functionality is located within MyUserControl.axaml and MyUserControl.axaml.cs files - the C\# file is just the code behind for the XAML file. 
+
+Here is the content of MyUserControl.axaml file:
+
+```markup
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="NP.Demos.UserControlSample.MyUserControl">
+  <Grid RowDefinitions="Auto, Auto, *, Auto">
+    <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+      <TextBlock Text="Enter Text: "
+                 VerticalAlignment="Center"/>
+      <TextBox x:Name="TheTextBox"
+                 MinWidth="150"/>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Grid.Row="1"
+                Margin="0,10">
+      <TextBlock Text="Saved Text: "
+                 VerticalAlignment="Center"/>
+      <TextBlock x:Name="SavedTextBlock"/>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Grid.Row="3">
+      <Button x:Name="CancelButton"
+              Content="Cancel"
+              Margin="5,0"/>
+      <Button x:Name="SaveButton" 
+              Content="Save"
+              Margin="5,0"/>
+    </StackPanel>
+  </Grid>
+</UserControl>
+```
+
+It has no bindings, and no commands - just a passive arrangement of various Visual elements.
+
+The functionality that makes it all work is located in the code-behind file MyUserControl.axaml.cs:
+
+```csharp
+public partial class MyUserControl : UserControl
+{
+    private TextBox _textBox;
+    private TextBlock _savedTextBlock;
+    private Button _cancelButton;
+    private Button _saveButton;
+
+    // saved value is retrieved from and saved to
+    // the _savedTextBlock
+    private string? SavedValue
+    {
+        get => _savedTextBlock.Text;
+        set => _savedTextBlock.Text = value;
+    }
+
+    // NewValue is retrieved from and saved to
+    // the _textBox
+    private string? NewValue
+    {
+        get => _textBox.Text;
+        set => _textBox.Text = value;
+    }
+
+    public MyUserControl()
+    {
+        InitializeComponent();
+
+        // set _cancelButton and its Click event handler
+        _cancelButton = this.FindControl<Button>("CancelButton");
+        _cancelButton.Click += OnCancelButtonClick;
+
+        // set _saveButton and its Click event handler
+        _saveButton = this.FindControl<Button>("SaveButton");
+        _saveButton.Click += OnSaveButtonClick;
+
+        // set the TextBlock that contains the Saved text
+        _savedTextBlock = this.FindControl<TextBlock>("SavedTextBlock");
+
+        // set the TextBox that contains the new text
+        _textBox = this.FindControl<TextBox>("TheTextBox");
+
+        // initial New and Saved values should be the same
+        NewValue = SavedValue;
+
+        // every time the text changes, we should check if
+        // Save and Cancel buttons should be enabled or not
+        _textBox.GetObservable(TextBox.TextProperty).Subscribe(OnTextChanged);
+    }
+
+    // On Cancel, the TextBox value should become the same as SavedValue
+    private void OnCancelButtonClick(object? sender, RoutedEventArgs e)
+    {
+        NewValue = SavedValue;
+    }
+
+    // On Save, the Saved Value should become the same as the TextBox Value
+    private void OnSaveButtonClick(object? sender, RoutedEventArgs e)
+    {
+        SavedValue = NewValue;
+
+        // also we should reset the IsEnabled states of the buttons
+        OnTextChanged(null);
+    }
+
+
+    private void OnTextChanged(string? obj)
+    {
+        bool canSave = NewValue != SavedValue;
+
+        // _cancelButton as _saveButton are enabled if TextBox'es value
+        // is not the same as saved value and disabled otherwise.
+        _cancelButton.IsEnabled = canSave;
+        _saveButton.IsEnabled = canSave;
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
+}
+```
+
+The visual elements defined within MyUserControl.xaml file are obtained inside the C\# code by using \`FindControl&lt;TElement&gt;\("ElementName"\) method, eg.
+
+```csharp
+// set _cancelButton and its Click event handler
+_cancelButton = this.FindControl<Button>("CancelButton");
+```
+
+Then the button's Click event is assigned a handler, eg:
+
+```csharp
+_cancelButton.Click += OnCancelButtonClick;
+```
+
+All the interesting processing is done inside the `Click` event handlers and inside the TextBox'es Text Change observable subscription:
+
+```csharp
+// every time the text changes, we should check if
+// Save and Cancel buttons should be enabled or not
+_textBox.GetObservable(TextBox.TextProperty).Subscribe(OnTextChanged);
+```
+
+The main problem with the UserControl is that we are tightly coupling the visual representation provided by MyUserControl.axaml file and the C\# logic contained within MyUserControl.axaml.cs file. 
+
+Using Custom Control we can completely separate  as will be shown below.
+
+Also, the visual representation from the C\# logic can be separated using View-ViewModel part of MVVM pattern, so that one could use completely different visual representations \(furnished by different DataTemplates\) with the same View Model that defines the business logic. Such MVVM example will be given in a future chapter.
 
 ## Avalonia ControlTemplates and CustomControls
+
+You can find this sample under [NP.Demos.CustomControlSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.CustomControlSample) solution. The sample behaves in exactly the same way as the previous sample, but is built very differently. All non-default C\# functionality is located under MyCustomControl.cs file:
+
+![](../.gitbook/assets/image%20%2856%29.png)
+
+Here is its code:
+
+```csharp
+public class MyCustomControl : TemplatedControl
+{
+    #region NewValue Styled Avalonia Property
+    public string? NewValue
+    {
+        get { return GetValue(NewValueProperty); }
+        set { SetValue(NewValueProperty, value); }
+    }
+
+    public static readonly StyledProperty<string?> NewValueProperty =
+        AvaloniaProperty.Register<MyCustomControl, string?>
+        (
+            nameof(NewValue)
+        );
+    #endregion NewValue Styled Avalonia Property
+
+
+    #region SavedValue Styled Avalonia Property
+    public string? SavedValue
+    {
+        get { return GetValue(SavedValueProperty); }
+        set { SetValue(SavedValueProperty, value); }
+    }
+
+    public static readonly StyledProperty<string?> SavedValueProperty =
+        AvaloniaProperty.Register<MyCustomControl, string?>
+        (
+            nameof(SavedValue)
+        );
+    #endregion SavedValue Styled Avalonia Property
+
+
+    #region CanSave Direct Avalonia Property
+    private bool _canSave = default;
+
+    public static readonly DirectProperty<MyCustomControl, bool> CanSaveProperty =
+        AvaloniaProperty.RegisterDirect<MyCustomControl, bool>
+        (
+            nameof(CanSave),
+            o => o.CanSave
+        );
+
+    public bool CanSave
+    {
+        get => _canSave;
+        private set
+        {
+            SetAndRaise(CanSaveProperty, ref _canSave, value);
+        }
+    }
+
+    #endregion CanSave Direct Avalonia Property
+
+    // CanSave is set to true when SavedValue is not the same as NewView
+    // false otherwise
+    private void SetCanSave(object? obj)
+    {
+        CanSave = SavedValue != NewValue;
+    }
+
+    public MyCustomControl()
+    {
+        this.GetObservable(NewValueProperty).Subscribe(SetCanSave);
+        this.GetObservable(SavedValueProperty).Subscribe(SetCanSave);
+    }
+
+    public void Save()
+    {
+        SavedValue = NewValue;
+    }
+
+    public void Cancel()
+    {
+        NewValue = SavedValue;
+    }
+}
+```
+
+Do not be scared by the number of lines, most of the code is there because of the StyledProperty and DirectProperty definitions and was created by the snippets _avsp_ and _avdr_ described above and available at [NP.Avalonia.Visuals/AvaloniaSnippets](https://github.com/npolyak/NP.Avalonia.Visuals/tree/main/AvaloniaSnippets).
 
 ## MVVM Pattern, `DataTemplates`, `ItemsPresenter` and `ContentPresenter`
 
