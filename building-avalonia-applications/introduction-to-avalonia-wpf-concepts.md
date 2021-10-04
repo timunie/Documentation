@@ -3651,7 +3651,7 @@ Its `Items` property is bound to `People` collection of the `TestViewModel` clas
 
 Its `ItemsPanel` is set to horizontally oriented `WrapPanel` just to demonstrate that we can change the way Visual items are arranged within the `ItemsPresenter` \(by default they'd be arranged vertically\).
 
-TestViewModelDataTemplate also contains a `TextBlock` to show the total number of people within `People` collection:
+TestViewModelDataTemplate has a `TextBlock` to show the total number of people within `People` collection:
 
 ```markup
 <TextBlock Text="{Binding Path=NumberOfPeople, StringFormat='Number of People: {0}'}"
