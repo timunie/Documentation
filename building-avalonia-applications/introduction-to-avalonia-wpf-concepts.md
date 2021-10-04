@@ -397,15 +397,15 @@ For the first border within the stack we use `StaticResource` markup extension:
 For the second border we use `StaticResource` class, without markup extension \(and you can see that the corresponding XAML is considerably more verbose\):
 
 ```markup
-      <!--Refer to xaml resource using StaticResource (without markup expression) -->
-      <Border x:Name="Border2"
-              Height="30"
-              Width="80"
-              Margin="0,5">
-        <Border.Background>
-          <StaticResource ResourceKey="StatusBrush"/>
-        </Border.Background>
-      </Border>
+<!--Refer to xaml resource using StaticResource (without markup expression) -->
+<Border x:Name="Border2"
+        Height="30"
+        Width="80"
+        Margin="0,5">
+  <Border.Background>
+    <StaticResource ResourceKey="StatusBrush"/>
+  </Border.Background>
+</Border>
 ```
 
 Finally, the third border uses `DynamicResource` markup extension:
