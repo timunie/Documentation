@@ -549,8 +549,8 @@ Take a look at the Resources section of the window at the top of the file:
       <!-- BlueBrush is defined locally -->
       <SolidColorBrush x:Key="BlueBrush"
                        Color="Blue"/>
-    </ResourceDictionary>
-  </Window.Resources>
+  </ResourceDictionary>
+</Window.Resources>
 ```
 
 `<ResourceInclude .../>` tags within `<ResourceDictionary.MergedDictionary>` tag means that we are merging the Resource Dictionaries defined externally to the current dictionary - they way we get all their key-value pairs. Those who know WPF can notice the difference - in WPF we user `<ResourceDictionary Source="..."/>` tag and not `<ResourceInclude Source="..."/>`. Also note that for a dependent project we do not separate the assembly from the rest of the URL and we are not using the cryptic "Component/" prefix for the URL. These are purely notational \(not conceptual\) differences, but still needs to be remembered.
