@@ -3506,7 +3506,7 @@ public class TestViewModel : INotifyPropertyChanged
 }
 ```
 
-It is populated with some 3 people's name it its constructor:
+It is populated with three people names it its constructor:
 
 ```csharp
 public TestViewModel()
