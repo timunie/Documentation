@@ -3338,8 +3338,6 @@ Here is how we define an instance of the `ViewModel` as a Window resource:
 
 And here is how we define the DataTemplate:
 
-
-
 ```markup
 <Window ...>
     <Window.Resources>
@@ -3386,7 +3384,39 @@ And here is how we define the DataTemplate:
 </Window>
 ```
 
+Remember that the `ViewModel` object provided as `Content` property to the `ContentPresenter` becomes a `DataContext` for the Visuals created by the DataTemplate, so we can bind the properties on the DataTemplate to the properties of the View Model without specifying the binding's source object \(since `DataContext` is the default source of the binding\).
 
+We bind the `TextBox` to the `NewValue` property of the `ViewModel` in the `TwoWay` mode so that if either changes, the other  would also change:
+
+```markup
+<TextBox x:Name="TheTextBox"
+         Text="{Binding Path=NewValue, Mode=TwoWay}"
+         MinWidth="150"/>
+```
+
+We bind the SavedTextBlock's Text property to `SavedValue`:
+
+```markup
+<TextBlock x:Name="SavedTextBlock"
+           Text="{Binding Path=SavedValue}"/>
+```
+
+And we bind the buttons' Commands to the `Save()` and `Cancel()` methods while also bind the buttons' `IsEnabled` property to `CanSave` Boolean property of the `ViewModel`:
+
+```markup
+<Button x:Name="CancelButton"
+        Content="Cancel"
+        Margin="5,0"
+        IsEnabled="{Binding Path=CanSave}"
+        Command="{Binding Path=Cancel}"/>
+<Button x:Name="SaveButton"
+        Content="Save"
+        Margin="5,0"
+        IsEnabled="{Binding Path=CanSave}"
+        Command="{Binding Path=Save}"/>
+```
+
+Of course we can pull the DataTemplate into a different file and even into a different project and re-use it in many places.
 
 
 
