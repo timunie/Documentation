@@ -3401,7 +3401,7 @@ We bind the SavedTextBlock's Text property to `SavedValue`:
            Text="{Binding Path=SavedValue}"/>
 ```
 
-And we bind the buttons' Commands to the `Save()` and `Cancel()` methods while also bind the buttons' `IsEnabled` property to `CanSave` Boolean property of the `ViewModel`:
+And we bind the buttons' Commands to the `Save()` and `Cancel()` methods while also binding the buttons' `IsEnabled` property to `CanSave` Boolean property of the `ViewModel`:
 
 ```markup
 <Button x:Name="CancelButton"
@@ -3417,6 +3417,10 @@ And we bind the buttons' Commands to the `Save()` and `Cancel()` methods while a
 ```
 
 Of course we can pull the DataTemplate into a different file and even into a different project and re-use it in many places.
+
+### `ItemsPresenter` Sample
+
+This sample describes how to use `ItemsPresenter` to display a collection of non-visual objects. The sample's code is located in [NP.Demos.ItemsPresenterSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.ItemsPresenterSample) solution.
 
 
 
