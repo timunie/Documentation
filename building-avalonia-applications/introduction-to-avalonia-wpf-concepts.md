@@ -734,10 +734,10 @@ The last sample will demonstrate that potentially one can use XAML even for a co
 The main program is located under Program.cs file and is very simple:
 
 ```csharp
-        public static void Main(string[] args)
-        {
-            Course course = new Course();
-        }
+public static void Main(string[] args)
+{
+    Course course = new Course();
+}
 ```
 
 You can put a breakpoint after the line and investigate the content of the course object:
