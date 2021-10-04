@@ -79,10 +79,10 @@ Here is the relevant code of MainWindow.xaml file:
 There are four custom namespaces defined by the following lines of the top XML Tag:
 
 ```markup
-        xmlns:dep1="clr-namespace:Dependency1Proj;assembly=Dependency1Proj"
-        xmlns:dep1_test_Folder="clr-namespace:Dependency1Proj.SubFolder;assembly=Dependency1Proj"
-        xmlns:local="clr-namespace:NP.Demos.XamlNamespacesSample"
-        xmlns:dep2="https://avaloniademos.com/xaml"
+xmlns:dep1="clr-namespace:Dependency1Proj;assembly=Dependency1Proj"
+xmlns:dep1_test_Folder="clr-namespace:Dependency1Proj.SubFolder;assembly=Dependency1Proj"
+xmlns:local="clr-namespace:NP.Demos.XamlNamespacesSample"
+xmlns:dep2="https://avaloniademos.com/xaml"
 ```
 
 Different buttons are are referred two by the corresponding XAML namespace prefixes. Let us take a look at `<RedButton/>` `RedButton` class is defined as a C\# class under Dependency1Proj project. Here is its code:
