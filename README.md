@@ -44,7 +44,7 @@ After Microsoft discontinued Silverlight \(and I still think it was not the best
 * Avalonia is [100% open source - and will continue as an open source project](https://github.com/AvaloniaUI/Avalonia) and has great and constantly expanding documentation and a great number of open source samples showing how to use Avalonia.
 * Avalonia has a decent [free support on Avalonia Gitter](https://gitter.im/AvaloniaUI/Avalonia), one can also post questions on [Avalonia Github Discussions](https://github.com/AvaloniaUI/Avalonia/discussions). Some [business support is also available](https://avaloniaui.net/support.html).
 * Avalonia has Visual Studio and Rider support for creating XAML files while having advantage of XAML intellisense. Visual Studio also has a designer view available.
-* Avalonia has a tool that facilitate the visual development and debugging \(akin to WPF Snoop\). This tool is also multiplatform - meaning you can use it on Mac and Linux and completely open source.
+* Avalonia has tools that facilitate the visual development and debugging \(akin to WPF Snoop\). This tool is also multiplatform - meaning you can use it on Mac and Linux and completely open source.
 
 ## Why Avalonia is Better than other Multiplatform UI Frameworks
 
