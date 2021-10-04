@@ -411,12 +411,12 @@ For the second border we use `StaticResource` class, without markup extension \(
 Finally, the third border uses `DynamicResource` markup extension:
 
 ```markup
-      <!--Refer to xaml resource using DynamicResource Markup Expression -->
-      <Border x:Name="StatusChangingBorder"
-              Background="{DynamicResource StatusBrush}"
-              Height="30"
-              Width="80"
-              Margin="0,5"/>
+<!--Refer to xaml resource using DynamicResource Markup Expression -->
+<Border x:Name="StatusChangingBorder"
+      Background="{DynamicResource StatusBrush}"
+      Height="30"
+      Width="80"
+      Margin="0,5"/>
 ```
 
 Button "StatusChangingBorder" is hooked within MainWindow.xaml.cs file to change the "StatusBrush" Resource from "Green" to "Red":
