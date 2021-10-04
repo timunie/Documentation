@@ -2318,7 +2318,7 @@ Bubbling Routed Event PointerPressed raised on TheBorder; Event Source is TheBor
 Bubbling Routed Event PointerPressed raised on TheWindow; Event Source is TheBorder
 ```
 
-The last line show that the bubbling pass of the event was handled on the window, even though the event had been handled before.
+The last line show that the bubbling pass of the event was raised on the window, even though the event had been marked as handled before.
 
 Now start the Avalonia Development Tool by mouse-clicking on the window of the sample and pressing **F12**. Click on the "Events" tab and out of all events displayed on the left pane, choose PointerPressed to be checked and undo the check on the rest of them:
 
@@ -2498,7 +2498,7 @@ Avalonia `Button` and `MenuItem` each have a property `Command` which can be bou
 
 Yet such approach of placing the commands within the View Models has major drawbacks:
 
-* It forces the View Models to depend visual .NET assemblies \(which implement the commands\). This breaks the hard barrier that should be placed between the non-visual View Models and the Visuals. After that it becomes much more difficult to control \(especially on a project with many developers\) that the visual code does not leak into the View Models. 
+* It forces the View Models to depend on visual .NET assemblies \(which implement the commands\). This breaks the hard barrier that should be placed between the non-visual View Models and the Visuals. After that it becomes much more difficult to control \(especially on a project with many developers\) that the visual code does not leak into the View Models. 
 * It unnecessarily pollutes the View Models.
 
 Avalonia, therefore provides a considerably cleaner way of calling a method on a View Model - by binding the Command to the method's name.
