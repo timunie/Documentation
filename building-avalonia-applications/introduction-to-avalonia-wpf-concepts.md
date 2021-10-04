@@ -3197,6 +3197,8 @@ Dealing with Avalonia Tutorial we are not interested in communications between t
 
 ### `ContentPresenter` Sample
 
+Code for this sample is located in [NP.Demos.ContentPresenterSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.ContentPresenterSample) solution. The demo application behaves in exactly the same fashion as 
+
 
 
 
