@@ -3671,7 +3671,7 @@ TestViewModelDataTemplate also contains a `TextBlock` to show the total number o
         Margin="10"/>
 ```
 
-Finally we put the View Model instance and the DataTemplate together by using `ContentPresenter`:
+Finally we put the View Model instance and the DataTemplate together by using `ContentPresenter`: 
 
 ```markup
 <ContentPresenter Content="{StaticResource TheViewModel}"
