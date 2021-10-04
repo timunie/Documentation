@@ -2881,7 +2881,7 @@ _textBox.GetObservable(TextBox.TextProperty).Subscribe(OnTextChanged);
 
 The main problem with the UserControl is that we are tightly coupling the visual representation provided by MyUserControl.axaml file and the C\# logic contained within MyUserControl.axaml.cs file. 
 
-Using Custom Control we can completely separate  as will be shown below.
+Using Custom Control we can completely separate them as will be shown below.
 
 Also, the visual representation from the C\# logic can be separated using View-ViewModel part of MVVM pattern, so that one could use completely different visual representations \(furnished by different DataTemplates\) with the same View Model that defines the business logic. Such MVVM example will be given in a future chapter.
 
