@@ -2858,7 +2858,7 @@ public partial class MyUserControl : UserControl
 }
 ```
 
-The visual elements defined within MyUserControl.xaml file are obtained inside the C\# code by using \`FindControl&lt;TElement&gt;\("ElementName"\) method, eg.
+The visual elements defined within MyUserControl.xaml file are obtained inside the C\# code by using `FindControl<TElement>("ElementName")` method, eg.
 
 ```csharp
 // set _cancelButton and its Click event handler
