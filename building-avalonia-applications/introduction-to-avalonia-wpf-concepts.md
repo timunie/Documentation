@@ -3187,11 +3187,15 @@ Dealing with Avalonia Tutorial we are not interested in communications between t
 
 ![](../.gitbook/assets/image%20%2859%29.png)
 
+`Content` property of `ContentPresenter` is usually set to a non-visual object, while `ContentTemplate` should be set to a `DataTemplate`. `ContentPresenter` combines them into a visual object \(View\).
+
 `ItemsPresenter` with the help of a `DataTemplate` converts a collection of non-visual objects into a collection of visual objects, each containing a `ContentPresenter` that converts the individual View Model item within the collection into a Visual object. The Visual objects are arranged according to the panel provided by `ItemsPresenter.PanelTemplate` property value. 
 
 ![](../.gitbook/assets/image%20%2860%29.png)
 
-`DataTemplate` is an Avalonia/WPF concept 
+`Items` property of `ItemsPresenter` usually contains a collection of non-visual objects. `ItemTemplate` has `DataTemplate` object in it and `ItemsPresenter` combines them into a collection of Visual objects. 
+
+
 
 
 
