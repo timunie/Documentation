@@ -3660,7 +3660,7 @@ TestViewModelDataTemplate also contains a `TextBlock` to show the total number o
             Margin="10"/>
 ```
 
- Finally, it contains the button for removing last item. Button's command is bound to the `RemoveLast()` method of the view model and its `IsEnabled` property is bound to `CanRemoveLast` property of the view model:
+It also contains the button for removing last item. Button's command is bound to the `RemoveLast()` method of the view model and its `IsEnabled` property is bound to `CanRemoveLast` property of the view model:
 
 ```markup
 <Button Content="Remove Last"
