@@ -3136,7 +3136,7 @@ And the buttons' commands are bound to the corresponding public methods: `Cancel
 
 [NP.Demos.DifferentVisualsForCustomControlSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.DifferentVisualsForCustomControlSample) shows exactly the same custom control displayed in two different ways:
 
-![](../.gitbook/assets/image%20%2862%29.png)
+![](../.gitbook/assets/image%20%2863%29.png)
 
 The representation at the top is the same as in the previous sample - while in the bottom I changed the row orders, so that the buttons are at the top, saved text in the middle and TextBox is at the bottom. That would not be possible with the User Control.
 
@@ -3197,7 +3197,9 @@ Dealing with Avalonia Tutorial we are not interested in communications between t
 
 ### `ContentPresenter` Sample
 
-Code for this sample is located in [NP.Demos.ContentPresenterSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.ContentPresenterSample) solution. The demo application behaves in exactly the same fashion as 
+Code for this sample is located in [NP.Demos.ContentPresenterSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.ContentPresenterSample) solution. The demo application behaves in exactly the same fashion as the samples in [Avalonia User Controls](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/building-avalonia-applications/introduction-to-avalonia-wpf-concepts#avalonia-user-controls) and [Avalonia ControlTemplates and CustomControls](https://app.gitbook.com/@avalonia-ui/s/avalonia-docs-2/building-avalonia-applications/introduction-to-avalonia-wpf-concepts#avalonia-controltemplates-and-customcontrols) chapters.
+
+![](../.gitbook/assets/image%20%2861%29.png)
 
 
 
