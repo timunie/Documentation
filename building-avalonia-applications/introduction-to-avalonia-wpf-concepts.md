@@ -3000,7 +3000,6 @@ The unneeded argument to this method is passed in order for its signature to mat
 There are also two public methods to be called by the Buttons' commands: `void Save()` and `void Cancel()`:
 
 ```csharp
-
     public void Save()
     {
         SavedValue = NewValue;
