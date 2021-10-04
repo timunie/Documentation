@@ -3195,7 +3195,7 @@ Dealing with Avalonia Tutorial we are not interested in communications between t
 
 `Items` property of `ItemsPresenter` usually contains a collection of non-visual objects. `ItemTemplate` has `DataTemplate` object in it and `ItemsPresenter` combines them into a collection of Visual objects. 
 
-
+### `ContentPresenter` Sample
 
 
 
