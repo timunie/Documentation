@@ -9,7 +9,6 @@ After Microsoft discontinued Silverlight \(and I still think it was not the best
 ## Why Avalonia is a Hit
 
 * Avalonia allows creating applications that look and behave the same on most popular Desktop and Mobile platforms \(Windows, Mac, various flavors of Linux, iOS and Android\) while also allowing the platform specific customizations.
-* _Avalonia already has many clients - need to list some prominent clients - do not have to be very specific. If the information is private, we can remove this point, but it should show people that Avalonia is serious._ 
 * Avalonia is supported by the following large companies:
 
   * [![](.gitbook/assets/se.png)](https://www.se.com/us/en/)
@@ -26,7 +25,7 @@ After Microsoft discontinued Silverlight \(and I still think it was not the best
 * Several extremely popular .NET open source projects have been ported to Avalonia. Among them are
   * [AvalonEdit](http://avalonedit.net/) - the port is available as [AvaloniaEdit](https://github.com/AvaloniaUI/AvaloniaEdit) - Rich Text Editor.
   * [RoslynPad](https://roslynpad.net/) - C\# code editor with intellisense.
-* Avalonia \(just as WPF and Silverlight\) is fully compositional: you can create a button out of Avalonia primitives in a fashion similar to creating a complex page, while its competitors \(Web, Xamarin and Java\) packages are not compositional to the same degree as will be detailed later.
+* Avalonia \(just like WPF and Silverlight\) is fully compositional: you can create a button out of Avalonia primitives in a fashion similar to creating a complex page, while its competitors \(Web, Xamarin and Java\) packages are not compositional to the same degree as will be detailed later.
 * Avalonia UI, unlike JavaScript has full advantage of a strongly typed language. Also Avalonia has full advantage of a compiled-to-binary code language and is in general considerably faster than JavaScript or TypeScript.
 * Avalonia is an open source multiplatform descendant of great Microsoft packages - WPF and Silverlight which brought the UI development on a completely new level creating a set of new concepts and which allow an experienced WPF developer create a full blown UI application in fraction of time and effort in comparison to other technologies. Here is the list of some of the new WPF concepts:
 
@@ -45,7 +44,7 @@ After Microsoft discontinued Silverlight \(and I still think it was not the best
 * Avalonia is [100% open source - and will continue as an open source project](https://github.com/AvaloniaUI/Avalonia) and has great and constantly expanding documentation and a great number of open source samples showing how to use Avalonia.
 * Avalonia has a decent [free support on Avalonia Gitter](https://gitter.im/AvaloniaUI/Avalonia), one can also post questions on [Avalonia Github Discussions](https://github.com/AvaloniaUI/Avalonia/discussions). Some [business support is also available](https://avaloniaui.net/support.html).
 * Avalonia has Visual Studio and Rider support for creating XAML files while having advantage of XAML intellisense. Visual Studio also has a designer view available.
-* Avalonia has tools that facilitate the visual development and debugging \(akin to WPF Snoop\). This tool is also multiplatform - meaning you can use it on Mac and Linux and completely open source.
+* Avalonia has a tool that facilitate the visual development and debugging \(akin to WPF Snoop\). This tool is also multiplatform - meaning you can use it on Mac and Linux and completely open source.
 
 ## Why Avalonia is Better than other Multiplatform UI Frameworks
 
