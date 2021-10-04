@@ -3189,7 +3189,7 @@ Dealing with Avalonia Tutorial we are not interested in communications between t
 
 `Content` property of `ContentPresenter` is usually set to a non-visual object, while `ContentTemplate` should be set to a `DataTemplate`. `ContentPresenter` combines them into a visual object \(View\) where the DataContext is given by the `ContentPresenter's` `Content` property while the Visual tree is provided by the `DataTemplate`.
 
-`ItemsPresenter` with the help of a `DataTemplate` converts a collection of non-visual objects into a collection of visual objects, each containing a `ContentPresenter` that converts the individual View Model item within the collection into a Visual object. The Visual objects are arranged according to the panel provided by `ItemsPresenter.PanelTemplate` property value. 
+`ItemsPresenter` with the help of a `DataTemplate` converts a collection of non-visual objects into a collection of visual objects, each containing a `ContentPresenter` that converts the individual View Model item within the collection into a Visual object. The Visual objects are arranged according to the panel provided by `ItemsPresenter.ItemsPanel` property value. 
 
 ![](../.gitbook/assets/image%20%2860%29.png)
 
@@ -3422,7 +3422,262 @@ Of course we can pull the DataTemplate into a different file and even into a dif
 
 This sample describes how to use `ItemsPresenter` to display a collection of non-visual objects. The sample's code is located in [NP.Demos.ItemsPresenterSample](https://github.com/npolyak/NP.Avalonia.Demos/tree/main/NP.Demos.AvaloniaBasicConcepts/NP.Demos.ItemsPresenterSample) solution.
 
+Run the sample, here is what you'll see:
 
+![](../.gitbook/assets/image%20%2867%29.png)
+
+Try making the window more narrow the name will wrap down eg:
+
+![](../.gitbook/assets/image%20%2866%29.png)
+
+This is because we are using a `WrapPanel` to display multiple items each item containing first and last names of a person.
+
+Press "Remove Last" button and the last person item will be removed and the "Number of People" text will be updated:
+
+![](../.gitbook/assets/image%20%2865%29.png)
+
+Keep pressing the button, until there are no items left - the button "Remove Last" will become disabled:
+
+![](../.gitbook/assets/image%20%2864%29.png)
+
+Take a look a the code for the sample. There are two View Model files added: PersonViewModel.cs and TestViewModel.cs. 
+
+`PersonViewModel` is the simplest possible class containing immutable properties `FirstName` and `LastName`:
+
+```csharp
+public class PersonViewModel
+{
+    public string FirstName { get; }
+
+    public string LastName { get; }
+
+    public PersonViewModel(string firstName, string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+    }
+}
+```
+
+`TestViewModel` represents the top level view model containing a collection of `PersonViewModel` objects in its property `People` of `ObservableCollection<PersonViewModel>` type:
+
+```csharp
+public class TestViewModel : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    // fires notification if a property changes
+    private void OnPropertyChanged(string propName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+    }
+
+    // collection of PersonViewModel objects
+    public ObservableCollection<PersonViewModel> People { get; } =
+        new ObservableCollection<PersonViewModel>();
+
+    // number of people
+    public int NumberOfPeople => People.Count;
+
+    public TestViewModel()
+    {
+        People.CollectionChanged += People_CollectionChanged;
+
+        People.Add(new PersonViewModel("Joe", "Doe"));
+        People.Add(new PersonViewModel("Jane", "Dane"));
+        People.Add(new PersonViewModel("John", "Dawn"));
+    }
+
+    // whenever collection changes, fire notification for possible updates
+    // of NumberOfPeople and CanRemoveLast properties.
+    private void People_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(NumberOfPeople));
+        OnPropertyChanged(nameof(CanRemoveLast));
+    }
+
+    // can remove last item only if collection has some items in it
+    public bool CanRemoveLast => NumberOfPeople > 0;
+
+    // remove last item of the collection
+    public void RemoveLast()
+    {
+        People.RemoveAt(NumberOfPeople - 1);
+    }
+}
+```
+
+It is populated with some 3 people's name it its constructor:
+
+```csharp
+public TestViewModel()
+{
+    People.CollectionChanged += People_CollectionChanged;
+
+    People.Add(new PersonViewModel("Joe", "Doe"));
+    People.Add(new PersonViewModel("Jane", "Dane"));
+    People.Add(new PersonViewModel("John", "Dawn"));
+}
+```
+
+Property `NumberOfPeople` contains the current number of items in collection `People` and property `CanRemoveLast` specifies if there are any items in the collection:
+
+```csharp
+// number of people
+public int NumberOfPeople => People.Count;
+
+...
+
+// can remove last item only if collection has some items in it
+public bool CanRemoveLast => NumberOfPeople > 0;
+```
+
+Every time the collection `People` changes we notify the binding that these two properties might have been updated:
+
+```csharp
+public TestViewModel()
+{
+    People.CollectionChanged += People_CollectionChanged;
+    ...
+}
+
+// whenever collection changes, fire notification for possible updates
+// of NumberOfPeople and CanRemoveLast properties.
+private void People_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+{
+    OnPropertyChanged(nameof(NumberOfPeople));
+    OnPropertyChanged(nameof(CanRemoveLast));
+}
+```
+
+There is a `RemoveLast()` method for removing the last item in the `People` collection:
+
+```csharp
+// remove last item of the collection
+public void RemoveLast()
+{
+    People.RemoveAt(NumberOfPeople - 1);
+}
+```
+
+MainWindow.axaml file contains all the XAML code for displaying the application:
+
+```markup
+<Window x:Name="TheWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="NP.Demos.ItemsPresenterSample.MainWindow"
+        xmlns:local="clr-namespace:NP.Demos.ItemsPresenterSample"
+        ...>
+  <Window.Resources>
+    <local:TestViewModel x:Key="TheViewModel"/>
+
+    <DataTemplate x:Key="PersonDataTemplate">
+      <Grid RowDefinitions="Auto, Auto"
+            Margin="10">
+        <TextBlock Text="{Binding Path=FirstName, StringFormat='FirstName: {0}'}"/>
+        <TextBlock Text="{Binding Path=LastName, StringFormat='LastName: {0}'}"
+                   Grid.Row="1"/>
+      </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="TestViewModelDataTemplate">
+      <Grid RowDefinitions="*, Auto, Auto">
+        <ItemsPresenter Items="{Binding Path=People}"
+                        ItemTemplate="{StaticResource PersonDataTemplate}">
+          <ItemsPresenter.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+          </ItemsPresenter.ItemsPanel>
+        </ItemsPresenter>
+        <TextBlock Text="{Binding Path=NumberOfPeople, StringFormat='Number of People: {0}'}"
+                   Grid.Row="1"
+                   HorizontalAlignment="Left"
+                   Margin="10"/>
+        <Button Content="Remove Last"
+                IsEnabled="{Binding Path=CanRemoveLast}"
+                Command="{Binding Path=RemoveLast}"
+                Grid.Row="2"
+                HorizontalAlignment="Right"
+                Margin="10"/>
+      </Grid>
+    </DataTemplate>
+  </Window.Resources>
+  <ContentPresenter Content="{StaticResource TheViewModel}"
+                    ContentTemplate="{StaticResource TestViewModelDataTemplate}"
+                    Margin="10"/>
+</Window>
+```
+
+The view model instance is defined at the top of the Window's resources section:
+
+```markup
+<local:TestViewModel x:Key="TheViewModel"/>
+```
+
+There are two data templates defined as Window's XAML resources: 
+
+1. TestViewModelDatatemplate - the data template for the whole application. It is built around `TestViewModel` class and it uses PersonDataTemplate to display visuals corresponding to each person.
+2. PersonDataTemplate - displays First and Last names of a single `PersonViewModel` item.
+
+PersonDataTemplate is very simple - just two `TextBlocks` for first and last names - one on top of the other:
+
+```markup
+<DataTemplate x:Key="PersonDataTemplate">
+  <Grid RowDefinitions="Auto, Auto"
+        Margin="10">
+    <TextBlock Text="{Binding Path=FirstName, StringFormat='FirstName: {0}'}"/>
+    <TextBlock Text="{Binding Path=LastName, StringFormat='LastName: {0}'}"
+               Grid.Row="1"/>
+  </Grid>
+</DataTemplate>
+```
+
+TestViewModelDataTemplate contains the `ItemsPresenter` \(for whose sake the sample was built\):
+
+```markup
+<ItemsPresenter Items="{Binding Path=People}"
+                ItemTemplate="{StaticResource PersonDataTemplate}">
+  <ItemsPresenter.ItemsPanel>
+    <ItemsPanelTemplate>
+      <WrapPanel Orientation="Horizontal"/>
+    </ItemsPanelTemplate>
+  </ItemsPresenter.ItemsPanel>
+</ItemsPresenter>
+```
+
+Its `Items` property is bound to `People` collection of the `TestViewModel` class and its `ItemTemplate` property is set to be the PersonDataTemplate.
+
+Its `ItemsPanel` is set to horizontally oriented `WrapPanel` just to demonstrate that we can change the way Visual items are arranged within the `ItemsPresenter` \(by default they'd be arranged vertically\).
+
+TestViewModelDataTemplate also contains a `TextBlock` to show the total number of people within `People` collection:
+
+```markup
+<TextBlock Text="{Binding Path=NumberOfPeople, StringFormat='Number of People: {0}'}"
+            Grid.Row="1"
+            HorizontalAlignment="Left"
+            Margin="10"/>
+```
+
+ Finally, it contains the button for removing last item. Button's command is bound to the `RemoveLast()` method of the view model and its `IsEnabled` property is bound to `CanRemoveLast` property of the view model:
+
+```markup
+<Button Content="Remove Last"
+        IsEnabled="{Binding Path=CanRemoveLast}"
+        Command="{Binding Path=RemoveLast}"
+        Grid.Row="2"
+        HorizontalAlignment="Right"
+        Margin="10"/>
+```
+
+Finally we put the View Model instance and the DataTemplate together by using `ContentPresenter`:
+
+```markup
+<ContentPresenter Content="{StaticResource TheViewModel}"
+                  ContentTemplate="{StaticResource TestViewModelDataTemplate}"
+                  Margin="10"/>
+```
 
 ## Styles
 
