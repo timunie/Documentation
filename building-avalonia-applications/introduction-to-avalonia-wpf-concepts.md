@@ -154,8 +154,6 @@ xmlns:local="clr-namespace:NP.Demos.XamlNamespacesSample"
 `GreenButton` and `GrayButton` are defined in two different namespaces of Dependency2Proj. `GreenButton` is defined under the project's main namespace - `Dependency2Proj` while `GrayButton` is defined under `Dependency2Proj.SubFolder` namespace. However, Dependency2Proj also has file AssemblyInfo.cs which defines assembly metadata. In this file we added a couple of lines at the bottom:
 
 ```csharp
-
-
 [assembly: XmlnsDefinition("https://avaloniademos.com/xaml", "Dependency2Proj")]
 [assembly: XmlnsDefinition("https://avaloniademos.com/xaml", "Dependency2Proj.SubFolder")]
 ```
