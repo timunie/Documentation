@@ -3201,6 +3201,9 @@ Code for this sample is located in [NP.Demos.ContentPresenterSample](https://git
 
 ![](../.gitbook/assets/image%20%2861%29.png)
 
+  
+Start typing within the `TextBox`. Buttons "Cancel" and "Save" will become enabled. If you press Cancel, the text will revert to the saved value \(in the beginning it is empty\). If you press Save, the new saved value will become whatever currently is in the `TextBox`. The buttons "Cancel" and "Save" are disabled when the Entered text is the same as the Saved Text and are enabled otherwise.
+
 
 
 
