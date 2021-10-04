@@ -3187,7 +3187,7 @@ Dealing with Avalonia Tutorial we are not interested in communications between t
 
 ![](../.gitbook/assets/image%20%2859%29.png)
 
-`Content` property of `ContentPresenter` is usually set to a non-visual object, while `ContentTemplate` should be set to a `DataTemplate`. `ContentPresenter` combines them into a visual object \(View\).
+`Content` property of `ContentPresenter` is usually set to a non-visual object, while `ContentTemplate` should be set to a `DataTemplate`. `ContentPresenter` combines them into a visual object \(View\) where the DataContext is given by the `ContentPresenter's` `Content` property while the Visual tree is provided by the `DataTemplate`.
 
 `ItemsPresenter` with the help of a `DataTemplate` converts a collection of non-visual objects into a collection of visual objects, each containing a `ContentPresenter` that converts the individual View Model item within the collection into a Visual object. The Visual objects are arranged according to the panel provided by `ItemsPresenter.PanelTemplate` property value. 
 
@@ -3203,6 +3203,188 @@ Code for this sample is located in [NP.Demos.ContentPresenterSample](https://git
 
   
 Start typing within the `TextBox`. Buttons "Cancel" and "Save" will become enabled. If you press Cancel, the text will revert to the saved value \(in the beginning it is empty\). If you press Save, the new saved value will become whatever currently is in the `TextBox`. The buttons "Cancel" and "Save" are disabled when the Entered text is the same as the Saved Text and are enabled otherwise.
+
+Unlike in previous cases, we are not creating either User or Custom Controls to achieve this. Instead we are using a completely non-visual `ViewModel` and a `DataTemplate` married together by a `ContentPresenter`. 
+
+The non-default code is located within ViewModel.cs and MainWindow.axaml files. 
+
+Here is the content of ViewModel.cs file:
+
+```csharp
+using System.ComponentModel;
+
+namespace NP.Demos.ContentPresenterSample
+{
+    public class ViewModel : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnPropertyChanged(string propName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
+
+        #region SavedValue Property
+        private string? _savedValue;
+        public string? SavedValue
+        {
+            get
+            {
+                return this._savedValue;
+            }
+            private set
+            {
+                if (this._savedValue == value)
+                {
+                    return;
+                }
+
+                this._savedValue = value;
+                this.OnPropertyChanged(nameof(SavedValue));
+                this.OnPropertyChanged(nameof(CanSave));
+            }
+        }
+        #endregion SavedValue Property
+
+
+        #region NewValue Property
+        private string? _newValue;
+        public string? NewValue
+        {
+            get
+            {
+                return this._newValue;
+            }
+            set
+            {
+                if (this._newValue == value)
+                {
+                    return;
+                }
+
+                this._newValue = value;
+                this.OnPropertyChanged(nameof(NewValue));
+                this.OnPropertyChanged(nameof(CanSave));
+            }
+        }
+        #endregion NewValue Property
+
+        // CanSave is set to true when SavedValue is not the same as NewView
+        // false otherwise
+        public bool CanSave => NewValue != SavedValue;
+
+        public void Save()
+        {
+            SavedValue = NewValue;
+        }
+
+        public void Cancel()
+        {
+            NewValue = SavedValue;
+        }
+    }
+}
+```
+
+We have `NewValue` and `SavedValue` string properties that fire `PropertyChanged` notification event when either of them is changed. They also notify of possible change of `CanSave` Boolean property that is `true` if and only if they are not the same:
+
+```csharp
+// CanSave is set to true when SavedValue is not the same as NewView
+// false otherwise
+public bool CanSave => NewValue != SavedValue;
+```
+
+There are also two public methods for saving and cancelling:
+
+```csharp
+public void Save()
+{
+    SavedValue = NewValue;
+}
+
+public void Cancel()
+{
+    NewValue = SavedValue;
+}
+```
+
+ MainWindow.axaml file defines the ViewModel instance, the DataTemplate as Resources and the ContentPresenter that marries them. Here is the `ContentPresenter`:
+
+```markup
+<Window ...>
+    <Window.Resources>
+        ...
+    </Window.Resources>
+    <ContentPresenter Margin="20"
+                      Content="{StaticResource TheViewModel}"
+                      ContentTemplate="{StaticResource TheDataTemplate}"/>
+</Window>
+```
+
+The instance of the view model and the data template are assigned to the `Content` and `ContentTemplate` properties of the `ContentPresenter` via `StaticResource` markup extension.
+
+Here is how we define an instance of the `ViewModel` as a Window resource:
+
+```markup
+<Window ...>
+    <Window.Resources>
+        <local:ViewModel x:Key="TheViewModel"/>
+        ...
+    </Window.Resources>
+...
+</Window>
+```
+
+And here is how we define the DataTemplate:
+
+
+
+```markup
+<Window ...>
+    <Window.Resources>
+            <local:ViewModel x:Key="TheViewModel"/>
+            <DataTemplate x:Key="TheDataTemplate">
+              <Grid RowDefinitions="Auto, Auto, *, Auto">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                  <TextBlock Text="Enter Text: "
+                              VerticalAlignment="Center"/>
+                  <TextBox x:Name="TheTextBox"
+                            Text="{Binding Path=NewValue, Mode=TwoWay}"
+                            MinWidth="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Grid.Row="1"
+                            Margin="0,10">
+                  <TextBlock Text="Saved Text: "
+                              VerticalAlignment="Center"/>
+                  <TextBlock x:Name="SavedTextBlock"
+                              Text="{Binding Path=SavedValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Grid.Row="3">
+                  <Button x:Name="CancelButton"
+                          Content="Cancel"
+                          Margin="5,0"
+                          IsEnabled="{Binding Path=CanSave}"
+                          Command="{Binding Path=Cancel}"/>
+                  <Button x:Name="SaveButton"
+                          Content="Save"
+                          Margin="5,0"
+                          IsEnabled="{Binding Path=CanSave}"
+                          Command="{Binding Path=Save}"/>
+                </StackPanel>
+              </Grid>
+            </DataTemplate>
+    </Window.Resources>
+...
+</Window>
+```
 
 
 
