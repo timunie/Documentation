@@ -4,7 +4,7 @@ When we originally created the `TodoListView` we added an "Add an item" button. 
 
 ### Create the view <a id="create-the-view"></a>
 
-We start by creating the view \(see [here](https://avaloniaui.net/docs/tutorial/creating-a-view#create-the-usercontrol) for a refresher on how to create a `UserControl` using a template\):
+We start by creating the view \(see [here](https://docs.avaloniaui.net/tutorials/todo-list-app/creating-a-view#create-the-usercontrol) for a refresher on how to create a `UserControl` using a template\):
 
 Views/AddItemView.axaml
 
