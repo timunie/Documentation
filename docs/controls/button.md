@@ -88,26 +88,11 @@ produces following output with **Windows 10**\
 Toggles between a "Play" icon and a "Pause" icon on click.
 
 ```markup
-<UserControl.Resources>
-    <Bitmap x:Key="Play">
-        <x:Arguments>
-            <x:String>/Assets/Player/Play.png</x:String>
-        </x:Arguments>
-    </Bitmap>
-    <Bitmap x:Key="Pause">
-        <x:Arguments>
-            <x:String>/Assets/Player/Pause.png</x:String>
-        </x:Arguments>
-    </Bitmap>
-</UserControl.Resources>
-```
-
-```markup
 <Button Name="PlayButton" HorizontalAlignment="Center" Width="36" Command="{Binding PlayCommand}">
     <Panel>
-        <Image Source="{DynamicResource Play}" IsVisible="{Binding !IsPlaying}" Width="20"
+        <Image Source="/Assets/Player/Play.png" IsVisible="{Binding !IsPlaying}" Width="20"
                           Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <Image Source="{DynamicResource Pause}" IsVisible="{Binding IsPlaying}" Width="20"
+        <Image Source="/Assets/Player/Pause.png" IsVisible="{Binding IsPlaying}" Width="20"
                           Height="20" VerticalAlignment="Center" HorizontalAlignment="Center" />
     </Panel>
 </Button>
