@@ -6,6 +6,8 @@ To use this interface you must implement the following two members in your class
 - `public bool Match(object data) { ... }` you need to check in this method if the provided data matches your `IDataTemplate` or not. You need to return true if the data matches, otherwise false.
 - `public IControl Build(object param) { ... }` In this method you need to build and return the control which represents your data. 
 
+
+
 ## Samples
 
 ### Basic Example
@@ -49,3 +51,5 @@ You can now use the class `MyDataTemplate` in your view like this:
 ### Advanced Samples
 
 [Implementing IDataTemplate](https://github.com/AvaloniaUI/Avalonia.Samples/tree/main/src/Avalonia.Samples/DataTemplates/IDataTemplateSample)
+
+The build-in ViewLocator in the `Avalonia MVVM Template` implements also `IDataTemplate`, see: [Basic ViewLocator Sample](https://github.com/AvaloniaUI/Avalonia.Samples/tree/main/src/Avalonia.Samples/Routing/BasicViewLocatorSample)
